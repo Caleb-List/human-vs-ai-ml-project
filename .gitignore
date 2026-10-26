@@ -1,0 +1,15 @@
+# Local Python environments and bytecode
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Downloaded raw data and generated processed data
+/data/
+
+# Local credentials and environment variables
+.env
+.env.*
+!.env.example
+kaggle.json
+access_token
