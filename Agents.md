@@ -80,11 +80,17 @@ Before the final preprocessing CSV is produced, the owner must approve:
   feature set from `Raw_Text`. Undocumented benchmark columns will not be
   treated as authoritative model inputs.
 
-The repository is still before the final processed-CSV checkpoint. The new
-`text_derived_features_candidate.csv` is an intermediate independently
-reproducible artifact for visual review. The final retention list, correlated
-feature policy, near-duplicate grouping, and transformations remain subject to
-review.
+The independently derived candidate artifact and reduced processed CSV have
+now been generated and validated:
+
+- `data/processed/text_derived_features_candidate.csv` contains the full
+  independently derived candidate feature set.
+- `data/processed/human_ai_text_processed.csv` contains the reduced seven-feature
+  model matrix plus traceability and target columns.
+
+The preprocessing artifact is complete for handoff. Near-duplicate grouping and
+the group-aware train/test split must be completed before model evaluation; they
+are modeling controls rather than additional feature transformations.
 
 ## Approved reduced-feature policy
 
@@ -96,3 +102,19 @@ diversity measure, the constant special-character count, and average syllables
 per word because syllable information is already incorporated into the retained
 readability score. This policy is written by `src/prepare_final_data.py`; model
 cross-validation will still compare it against the full candidate policy.
+
+## Model-development handoff
+
+The planned comparison includes Logistic Regression, Linear SVM, Random Forest,
+Gradient Boosting, and K-Nearest Neighbors. All models must use the same
+group-aware folds, leakage-safe preprocessing, and rubric metrics: accuracy,
+precision, recall, F1-score, ROC-AUC, confusion matrices, and train/validation
+comparisons. The full model rationale is in
+`rubric_explanation/model_development.md`.
+
+## Current next step
+
+Build the near-duplicate similarity groups from `Raw_Text`, derive and justify a
+threshold from the data, and create stratified group-aware train/test and
+cross-validation splits. Do not change the approved feature schema while doing
+this. Record group counts and Human/AI proportions before training models.
