@@ -16,6 +16,27 @@ from data_loader import LABEL_NAMES, PROJECT_ROOT, load_dataset
 FIGURES_DIR = PROJECT_ROOT / "reports" / "figures"
 SCATTER_SAMPLE_PER_CLASS = 5_000
 CLASS_PALETTE = {"Human": "#4c72b0", "AI": "#dd8452"}
+TEXT_DERIVED_NUMERIC_COLUMNS = [
+    "Word_Count",
+    "Character_Count_Total",
+    "Sentence_Count",
+    "Average_Word_Length",
+    "Average_Sentence_Length_Words",
+    "Unique_Words_Count",
+    "Lexical_Diversity_Score",
+    "Punctuation_Count",
+    "Punctuation_Density",
+    "Special_Char_Count",
+    "Stopword_Count",
+    "Stopword_Density",
+    "Flesch_Kincaid_Grade_Level",
+    "Smog_Index",
+    "Average_Syllables_Per_Word",
+    "Capital_Letter_Count",
+    "Emotion_Tone_Intensity",
+    "Coherence_Score",
+    "Burstiness_Score",
+]
 
 
 def _label_names(df: pd.DataFrame) -> pd.Series:
@@ -216,7 +237,129 @@ def main() -> None:
     fig.savefig(FIGURES_DIR / "ai_formal_tone_score_histogram.png", dpi=160)
     plt.close(fig)
 
-    print(f"Saved twelve plots to {FIGURES_DIR}")
+    # 13. Numeric feature correlation with the target. This is an audit aid,
+    # not a feature-selection rule: provenance and prediction-time availability
+    # must be reviewed before any field is retained.
+    numeric_columns = plot_data.select_dtypes(include="number").columns
+    correlation = (
+        plot_data[list(numeric_columns)]
+        .corr(numeric_only=True)["Label"]
+        .drop("Label")
+        .sort_values()
+    )
+    fig, ax = plt.subplots(figsize=(9, 7))
+    correlation.plot(kind="barh", ax=ax, color="#4c72b0")
+    ax.axvline(0, color="#333333", linewidth=0.8)
+    ax.set(
+        title="Numeric feature correlation with the target (audit only)",
+        xlabel="Pearson correlation with Label",
+        ylabel="Feature",
+    )
+    fig.tight_layout()
+    fig.savefig(FIGURES_DIR / "numeric_feature_target_correlations.png", dpi=160)
+    plt.close(fig)
+
+    # 14. Missingness by class makes structural missingness visible.
+    missing_by_class = (
+        plot_data.assign(Label_Name=_label_names(plot_data))
+        .groupby("Label_Name", observed=True)
+        .apply(lambda group: group.isna().mean() * 100, include_groups=False)
+        .T
+        .reindex(columns=["Human", "AI"])
+    )
+    missing_by_class = missing_by_class.loc[missing_by_class.sum(axis=1) > 0]
+    fig, ax = plt.subplots(figsize=(9, 4))
+    if missing_by_class.empty:
+        ax.text(0.5, 0.5, "No missing values found", ha="center", va="center")
+        ax.set_axis_off()
+    else:
+        missing_by_class.plot(kind="bar", ax=ax, color=[CLASS_PALETTE["Human"], CLASS_PALETTE["AI"]])
+        ax.set(
+            title="Missingness by class (percentage of rows)",
+            xlabel="Feature",
+            ylabel="Missing (%)",
+        )
+        ax.tick_params(axis="x", rotation=35)
+        ax.legend(title="Class")
+    fig.tight_layout()
+    fig.savefig(FIGURES_DIR / "missingness_by_class.png", dpi=160)
+    plt.close(fig)
+
+    # 15. Metadata cross-tab audit: useful for deciding whether metadata is a
+    # legitimate input or a proxy for how the benchmark was constructed.
+    metadata = [
+        column
+        for column in ["Source_Model", "Model_Size", "Generation_Prompt_Type", "RAG_Context_Provided"]
+        if column in plot_data
+    ]
+    fig, axes = plt.subplots(len(metadata), 1, figsize=(11, 3.2 * len(metadata)))
+    axes = [axes] if len(metadata) == 1 else list(axes)
+    for ax, column in zip(axes, metadata):
+        counts = pd.crosstab(plot_data[column], plot_data["Label_Name"])
+        counts.reindex(columns=["Human", "AI"], fill_value=0).plot(
+            kind="bar", ax=ax, color=[CLASS_PALETTE["Human"], CLASS_PALETTE["AI"]]
+        )
+        ax.set(title=f"{column}: category counts by class", xlabel=column, ylabel="Rows")
+        ax.tick_params(axis="x", rotation=35)
+        ax.legend(title="Class")
+    fig.tight_layout()
+    fig.savefig(FIGURES_DIR / "metadata_associations_by_class.png", dpi=160)
+    plt.close(fig)
+
+    # 16. Correlation matrix for numeric fields that are plausibly derived from
+    # text. This is a redundancy diagnostic, not an automatic keep/drop rule.
+    text_columns = [column for column in TEXT_DERIVED_NUMERIC_COLUMNS if column in plot_data]
+    text_correlation = plot_data[text_columns].corr()
+    fig, ax = plt.subplots(figsize=(13, 11))
+    sns.heatmap(
+        text_correlation,
+        cmap="vlag",
+        center=0,
+        vmin=-1,
+        vmax=1,
+        annot=True,
+        fmt=".2f",
+        annot_kws={"fontsize": 7},
+        square=True,
+        linewidths=0.25,
+        cbar_kws={"label": "Pearson correlation"},
+        ax=ax,
+    )
+    ax.set(title="Text-derived numeric feature correlation matrix (audit only)")
+    fig.tight_layout()
+    fig.savefig(FIGURES_DIR / "text_derived_feature_correlation_matrix.png", dpi=180)
+    plt.close(fig)
+
+    # 17. Exact and normalized duplicate audit. Normalization is deliberately
+    # conservative: it lowercases and collapses whitespace only.
+    normalized_text = (
+        plot_data["Raw_Text"]
+        .astype(str)
+        .str.lower()
+        .str.replace(r"\s+", " ", regex=True)
+        .str.strip()
+    )
+    duplicate_counts = pd.Series(
+        {
+            "Exact raw text duplicates": int(plot_data["Raw_Text"].duplicated().sum()),
+            "Normalized text duplicates": int(normalized_text.duplicated().sum()),
+        }
+    )
+    fig, ax = plt.subplots(figsize=(8, 5))
+    bars = ax.bar(duplicate_counts.index, duplicate_counts.values, color="#4c72b0")
+    for bar, count in zip(bars, duplicate_counts.values):
+        ax.text(bar.get_x() + bar.get_width() / 2, count + 0.5, str(count), ha="center")
+    ax.set(
+        title="Duplicate text audit",
+        ylabel="Duplicate rows after first occurrence",
+        ylim=(0, max(1, duplicate_counts.max() * 1.2)),
+    )
+    ax.tick_params(axis="x", rotation=15)
+    fig.tight_layout()
+    fig.savefig(FIGURES_DIR / "duplicate_audit.png", dpi=160)
+    plt.close(fig)
+
+    print(f"Saved seventeen plots to {FIGURES_DIR}")
 
 
 if __name__ == "__main__":
