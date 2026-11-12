@@ -13,3 +13,6 @@ __pycache__/
 !.env.example
 kaggle.json
 access_token
+
+# Trained model files (rebuild with src/train_logistic_regression.py)
+/models/
