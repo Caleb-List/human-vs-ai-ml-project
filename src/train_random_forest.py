@@ -171,7 +171,7 @@ def main() -> None:
         for metric in SCORING
         for part in ("train", "test")
         for stat in ("mean", "std")
-    ] + ["mean_fit_time", "rank_test_roc_auc"]
+    ] + ["rank_test_roc_auc"]
     METRICS_DIR.mkdir(parents=True, exist_ok=True)
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
     cv_results[keep].to_csv(METRICS_DIR / f"{MODEL_NAME}_cv_results.csv", index=False)
