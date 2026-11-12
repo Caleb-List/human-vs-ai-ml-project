@@ -3,6 +3,7 @@
 Usage:
     python src/predict_text.py "Some passage of text to classify."
     python src/predict_text.py --file path/to/passage.txt
+    python src/predict_text.py --model random_forest "Some passage of text."
     echo "Some text" | python src/predict_text.py
 
 The model only sees the seven approved features derived from the text itself,
@@ -22,13 +23,15 @@ from modeling import MODELS_DIR
 from text_features import extract_text_features
 
 
-DEFAULT_MODEL = MODELS_DIR / "logistic_regression.joblib"
+AVAILABLE_MODELS = ("logistic_regression", "random_forest")
+DEFAULT_MODEL_NAME = "logistic_regression"
 
 
-def predict(text: str, model_path=DEFAULT_MODEL) -> dict:
+def predict(text: str, model_name: str = DEFAULT_MODEL_NAME) -> dict:
+    model_path = MODELS_DIR / f"{model_name}.joblib"
     if not model_path.exists():
         raise FileNotFoundError(
-            f"{model_path} not found. Train it first: python src/train_logistic_regression.py"
+            f"{model_path} not found. Train it first: python src/train_{model_name}.py"
         )
     bundle = joblib.load(model_path)
     features = extract_text_features(text)
@@ -49,6 +52,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("text", nargs="?", help="Text to classify (or use --file / stdin)")
     parser.add_argument("--file", help="Read the text from this file")
+    parser.add_argument(
+        "--model", choices=AVAILABLE_MODELS, default=DEFAULT_MODEL_NAME,
+        help="Which trained model to use (default: %(default)s)",
+    )
     args = parser.parse_args()
 
     if args.file:
@@ -59,7 +66,8 @@ def main() -> None:
     else:
         text = sys.stdin.read()
 
-    result = predict(text)
+    result = predict(text, args.model)
+    print(f"Model: {args.model}")
     print(f"Prediction: {result['prediction']}  (P(AI) = {result['probability_ai']:.3f}, "
           f"confidence {result['confidence']:.1%})")
     print("Features used:")
