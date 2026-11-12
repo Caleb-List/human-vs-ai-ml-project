@@ -240,19 +240,48 @@ also found zero repeated values.
 *Figure 7. Exact and conservative normalized duplicate audit. Zero exact
 duplicates does not rule out paraphrases, shared templates, or topic leakage.*
 
-Near-duplicate detection remains a required control before finalizing the
-train/test split. The method, similarity threshold, and whether a group-aware
-split is required will be documented before modeling. The project will not
-claim that a random row split is leakage-safe solely because exact duplicates
-are absent.
+Near-duplicate detection was then run over all 1.25 billion text pairs using
+the cosine overlap of word-trigram sets (`src/build_splits.py`). It revealed
+that the benchmark is template-generated: the corpus consists of 11 writing
+templates (6 Human, 5 AI) filled with a topic and perturbed by random word
+swaps. Every template family is single-class, every text's nearest neighbor has
+the same label, and no Human/AI pair shares more than 6% of its trigrams.
+
+Near-duplicates were defined as pairs more similar than template-sharing alone
+explains. The threshold 0.82 sits above the 99.99th percentile of within-family
+similarity (0.80) and just past the point where single-linkage chaining stops
+merging whole families (largest group 1,011 rows at 0.81 vs. 140 at 0.82). The
+resulting 47,779 groups drive a stratified, group-aware 40,000/10,000
+train/test split and five CV folds (exactly 50% AI in every partition). Whole
+template families are additionally held out as a generalization stress test.
+Full details are in
+[`rubric_explanation/data_preprocessing_and_exploration.md`](rubric_explanation/data_preprocessing_and_exploration.md).
+
+![Near-duplicate similarity diagnostics](reports/figures/near_duplicate_similarity_diagnostics.png)
+
+*Figure 8. Left: all-pairs similarity; Human-AI pairs never exceed 0.06. Right:
+largest near-duplicate group versus threshold; chaining collapses at 0.82.*
+
+## 7a. First model result: logistic regression
+
+A standardized, L1-regularized logistic regression (`C = 0.1`, chosen by
+group-aware CV over 16 configurations) reaches 0.9944 accuracy, 0.9944 F1, and
+0.9998 ROC-AUC on the untouched test set, with a negligible train/validation
+gap. When whole templates are held out, validation accuracy is 0.989 ± 0.015,
+falling to 0.965 on the fold whose AI template is hardest. Average word length,
+Flesch-Kincaid grade, and punctuation density carry almost all of the signal.
+The benchmark's own detector score reaches only 0.448 ROC-AUC on the same test
+rows. Because of the template structure, these numbers describe this benchmark,
+not real-world AI detection. Full results:
+[`rubric_explanation/model_eval_and_comparison.md`](rubric_explanation/model_eval_and_comparison.md).
 
 ## 8. Leakage-aware preprocessing plan
 
 Next Step:
 
-1. Audit near-duplicate and template similarity before splitting.
-2. Create a reproducible stratified train/test split, or a group-aware split if
-   similarity groups require it.
+1. ~~Audit near-duplicate and template similarity before splitting.~~ Done.
+2. ~~Create a reproducible stratified train/test split, or a group-aware split if
+   similarity groups require it.~~ Done (group-aware).
 3. Fit imputers, encoders, scalers, and feature-selection procedures using only
    the training partition.
 4. Apply the fitted transformations unchanged to validation and test data.

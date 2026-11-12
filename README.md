@@ -100,7 +100,51 @@ independently derived model features.
 
 The reduced CSV is the preprocessing handoff for modeling. It is not a model
 prediction file. Near-duplicate grouping and the group-aware train/test split
-are performed in the modeling workflow, not by this CSV-writing script.
+are performed by `src/build_splits.py`, not by this CSV-writing script.
+
+## Build near-duplicate groups and the train/test split
+
+```bash
+python src/build_splits.py
+```
+
+This takes about two minutes. It scores every pair of texts by word-trigram
+overlap, groups near-duplicates (similarity >= 0.82) and template families
+(similarity >= 0.60), and writes a reproducible, stratified, group-aware
+80/20 train/test split plus five CV folds to
+`data/processed/human_ai_text_splits.csv`. Diagnostics go to
+`reports/metrics/split_summary.json` and
+`reports/figures/near_duplicate_similarity_diagnostics.png`. The feature CSV
+is not modified. See
+`rubric_explanation/data_preprocessing_and_exploration.md` for how the
+thresholds were derived and for the finding that the benchmark is built from 11
+single-class writing templates.
+
+## Train and evaluate models
+
+```bash
+python src/train_logistic_regression.py
+```
+
+This tunes `C` and the penalty type with group-aware CV, scores the held-out
+test set once, runs a template-family hold-out stress test, and writes metrics
+to `reports/metrics/`, figures to `reports/figures/logistic_regression_*.png`,
+and the fitted pipeline to `models/logistic_regression.joblib` (ignored by Git).
+Results are summarized in `rubric_explanation/model_eval_and_comparison.md`.
+New models should reuse the shared loaders, folds, and metrics in
+`src/modeling.py` so comparisons stay fair.
+
+## Classify a new text snippet
+
+After training, score any text:
+
+```bash
+python src/predict_text.py "Paste a passage of text here."
+```
+
+It prints the predicted class, the probability that the text is AI-generated,
+and the seven feature values it used. `--file path.txt` and standard input also
+work.
 
 The original visualization script writes class-balance, word-count, detector-score,
 and source-model plots, plus scatter plots for word count vs. lexical diversity,
@@ -127,4 +171,8 @@ In this dataset, `Label` 0 means Human and `Label` 1 means AI. Labels are balanc
 - `src/build_candidate_features.py` writes the full independently derived feature artifact.
 - `src/visualize_candidate_features.py` creates candidate-feature review plots.
 - `src/prepare_final_data.py` writes and validates the reduced seven-feature CSV.
+- `src/build_splits.py` builds near-duplicate groups, template families, and the group-aware train/test and CV split.
+- `src/modeling.py` holds the shared data loading, folds, metrics, and plots used by every model.
+- `src/train_logistic_regression.py` tunes and evaluates the logistic-regression baseline.
+- `src/predict_text.py` classifies an arbitrary text snippet with a trained model.
 - `data/raw/` holds the original Kaggle file; `data/processed/` is for derived data. Git ignores all of `data/`.
