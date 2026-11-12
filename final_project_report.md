@@ -275,6 +275,21 @@ rows. Because of the template structure, these numbers describe this benchmark,
 not real-world AI detection. Full results:
 [`rubric_explanation/model_eval_and_comparison.md`](rubric_explanation/model_eval_and_comparison.md).
 
+## 7b. Second model: random forest, and comparison
+
+A 300-tree random forest (fully grown trees, `max_features = 2`, chosen by the
+same group-aware CV over 36 configurations) reaches 0.9952 test accuracy and
+0.9999 ROC-AUC. It fits the training data perfectly (validation 0.9975), and
+on unseen templates it is slightly worse than logistic regression (0.9859 vs.
+0.9888). It makes 48 test errors versus 56 for logistic regression, but an
+exact McNemar test finds the difference not significant (p = 0.27). Both
+models make almost all of their errors in two templates: the most formal
+human template and the least formal AI template. Permutation importance ranks
+the same three features highest as the logistic-regression coefficients. The
+draft recommendation is logistic regression: the same accuracy within noise,
+better generalization to unseen templates, no overfitting gap, and directly
+interpretable. Walkthrough: `notebooks/05_model_comparison.ipynb`.
+
 ## 8. Leakage-aware preprocessing plan
 
 Next Step:
@@ -286,7 +301,8 @@ Next Step:
    the training partition.
 4. Apply the fitted transformations unchanged to validation and test data.
 5. Train four or five different models under the same feature matrix and split
-   policy.
+   policy. (Logistic regression and random forest done; linear SVM, gradient
+   boosting, and KNN pending.)
 6. Evaluate accuracy, precision, recall, F1, ROC-AUC, confusion matrices, and
    train/test differences as appropriate for the project.
 7. Use the benchmark detector score only as an evaluation reference.
