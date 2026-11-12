@@ -24,7 +24,8 @@ from sklearn.metrics import (
     recall_score,
     roc_auc_score,
 )
-from sklearn.model_selection import StratifiedGroupKFold
+from sklearn.base import clone
+from sklearn.model_selection import StratifiedGroupKFold, cross_validate
 
 from data_loader import PROJECT_ROOT, RAW_CSV_PATH
 from prepare_final_data import FINAL_FEATURE_COLUMNS
@@ -127,10 +128,73 @@ def confusion(y_true, y_pred) -> dict[str, int]:
     }
 
 
+def summarize_cv(cv_scores: dict) -> dict:
+    """Mean, SD, and per-fold values for train and validation folds."""
+    summary = {}
+    for metric in SCORING:
+        for part in ("train", "test"):
+            values = np.asarray(cv_scores[f"{part}_{metric}"])
+            key = "validation" if part == "test" else "train"
+            summary.setdefault(key, {})[metric] = {
+                "mean": float(values.mean()),
+                "std": float(values.std(ddof=1)),
+                "folds": [float(v) for v in values],
+            }
+    return summary
+
+
+def template_family_holdout(estimator, train: pd.DataFrame) -> dict:
+    """Cross-validate `estimator` with whole template families held out.
+
+    Runs on the training partition only; the test partition is never touched.
+    """
+    X, y = train[FEATURE_COLUMNS], train[TARGET_COLUMN]
+    folds = template_family_cv(train)
+    scores = cross_validate(
+        clone(estimator), X, y, cv=folds, scoring=SCORING, return_train_score=True, n_jobs=-1
+    )
+    members = [
+        {
+            "validation_families": sorted(train.loc[val, "Template_Family_ID"].unique().tolist()),
+            "validation_rows": int(len(val)),
+            "validation_ai_proportion": float(y.iloc[val].mean()),
+        }
+        for _, val in folds
+    ]
+    return {"summary": summarize_cv(scores), "folds": members}
+
+
 def load_detector_scores(text_ids: pd.Series) -> pd.Series:
     """Benchmark detector score, used ONLY as an external evaluation reference."""
     raw = pd.read_csv(RAW_CSV_PATH, usecols=["Text_ID", "Detection_Score_Benchmark_Model_A"])
     return text_ids.map(raw.set_index("Text_ID")["Detection_Score_Benchmark_Model_A"])
+
+
+def detector_reference(test: pd.DataFrame) -> tuple[dict, pd.Series]:
+    """Metrics for the benchmark detector score on the test partition (threshold 50)."""
+    detector = load_detector_scores(test["Text_ID"])
+    metrics = classification_metrics(test[TARGET_COLUMN], (detector >= 50).astype(int), detector)
+    return (
+        {"note": "Detection_Score_Benchmark_Model_A, thresholded at 50; evaluation only", **metrics},
+        detector,
+    )
+
+
+def save_test_predictions(model_name: str, test: pd.DataFrame, y_pred, y_score) -> None:
+    """Store per-row held-out predictions so models can be compared and errors inspected."""
+    METRICS_DIR.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(
+        {
+            "Text_ID": test["Text_ID"],
+            "Label": test[TARGET_COLUMN],
+            "Predicted_Label": np.asarray(y_pred, dtype=int),
+            "Probability_AI": np.round(np.asarray(y_score, dtype=float), 6),
+        }
+    ).to_csv(METRICS_DIR / f"{model_name}_test_predictions.csv", index=False)
+
+
+def format_cv_block(block: dict) -> str:
+    return "  ".join(f"{k}={v['mean']:.4f}±{v['std']:.4f}" for k, v in block.items())
 
 
 def plot_confusion_matrix(y_true, y_pred, title: str, path) -> None:
