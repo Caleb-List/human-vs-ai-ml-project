@@ -63,13 +63,50 @@ objective from logistic regression. It is appropriate for a small, continuous
 feature matrix and can be compared fairly under the same scaling and grouped
 folds. The main tuning parameter is `C`.
 
-### 3. Random forest
+### 3. Random forest — implemented
 
-This nonlinear ensemble can represent threshold effects and feature
-interactions without requiring scaled inputs. It provides a useful contrast to
-the two linear models and supports feature-importance analysis. Important
-parameters include number of trees, maximum depth, minimum leaf size, and
-maximum features.
+Status: trained and evaluated (`src/train_random_forest.py`,
+`notebooks/04_random_forest.ipynb`). It was built second, ahead of the linear
+SVM, because it is the most different from logistic regression. Results are in
+`model_eval_and_comparison.md`.
+
+**Why this model.** It is a nonlinear contrast to the linear baseline. Trees
+can represent threshold effects and feature interactions that a linear
+boundary cannot. If the forest found much more signal, that would show the
+linear model was leaving information unused. It also gives feature importances
+that can be checked against the logistic-regression coefficients.
+
+**Assumptions and characteristics.** No distributional or linearity
+assumptions. Each tree is trained on a bootstrap sample and considers a random
+subset of `max_features` features at each split. Averaging many decorrelated
+trees reduces the variance a single deep tree would have. Splits depend only on
+feature order, so no scaling is needed and nothing is fit outside the model.
+Rows are still assumed independent, which is why the same near-duplicate-aware
+folds are used.
+
+**Pipeline.** `RandomForestClassifier(n_estimators=300, random_state=478)`.
+
+**Hyperparameters and tuning.**
+
+| Hyperparameter | Values searched | Role |
+| --- | --- | --- |
+| `max_depth` | 4, 8, 16, None | Tree depth; deeper trees fit finer patterns and can memorize |
+| `min_samples_leaf` | 1, 10, 50 | Minimum texts per leaf; larger values smooth the boundary |
+| `max_features` | 2, 4, 7 | Features tried per split; 2 = floor(sqrt(7)) is the usual default, 7 is plain bagging |
+
+36 configurations × the same 5 near-duplicate-group-aware CV folds, selected
+by mean validation ROC-AUC, the same rule as logistic regression.
+`n_estimators` is fixed at 300 rather than tuned: more trees reduce variance
+without overfitting, so it is a compute choice. `class_weight=None` because
+the classes are balanced.
+
+**Selected:** `max_depth = None`, `min_samples_leaf = 1`, `max_features = 2`.
+Depth 16 and unlimited depth score identically. `max_features = 2` beats 4 and
+7 at every depth and leaf size, so decorrelating the trees helps, though only by
+small margins because ROC-AUC is near its ceiling (0.9998–1.0000) for most
+configurations. Shallow trees
+(`max_depth = 4`) and large leaves (`min_samples_leaf = 50`) are mildly
+underfit (`reports/figures/random_forest_tuning_curve.png`).
 
 ### 4. Gradient boosting
 
