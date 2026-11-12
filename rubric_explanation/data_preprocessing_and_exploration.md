@@ -133,3 +133,113 @@ The reduced artifact is generated and validated by
    emphasis. Do not let preprocessing decisions be justified only by accuracy.
 6. Validate the final CSV: expected columns, row count, target values, missing
    values, duplicate policy, data types, and a recorded source/configuration.
+
+## Near-duplicate grouping and group-aware split
+
+Implemented in `src/build_splits.py`. It writes
+`data/processed/human_ai_text_splits.csv` (keyed by `Text_ID`) and
+`reports/metrics/split_summary.json`. The approved seven-feature schema in
+`human_ai_text_processed.csv` is unchanged; split assignments live in a
+separate file and are joined at modeling time.
+
+### Similarity definition
+
+Each text is reduced to the set of its lowercased word trigrams `T(x)`
+(212,844 distinct trigrams in the corpus). Two texts are compared with
+
+`sim(a, b) = |T(a) ∩ T(b)| / sqrt(|T(a)| · |T(b)|)`
+
+the cosine similarity of binary trigram indicator vectors. All 1.25 billion
+text pairs are scored exactly (chunked sparse matrix products, about two
+minutes on a laptop); no approximate hashing is used.
+
+### Finding: the benchmark is template-generated
+
+The all-pairs analysis shows the corpus has a much stronger structure than
+"near-duplicates":
+
+- Every text's single most similar other text has similarity of at least
+  0.585, and in 100% of cases that nearest neighbor has the same label.
+- The highest similarity between any Human text and any AI text is 0.06. The
+  two classes share essentially no three-word phrases.
+- Connected components of the graph with edges at `sim >= 0.60` produce
+  exactly **11 template families** (plus 6 heavily word-scrambled Human texts
+  that were attached to the family of their nearest neighbor). Six families are
+  entirely Human (4,052–4,266 rows each), five are entirely AI (4,921–5,121
+  rows each). No family mixes labels.
+- Each family is one fill-in-the-blank template ("When it comes to *{topic}*,
+  there are several schools of thought…") with a topic substituted and random
+  word swaps/insertions applied. The AI families do not align with
+  `Generation_Prompt_Type`: every AI family contains all ten AI prompt types
+  in roughly equal proportion.
+
+![Similarity diagnostics](../reports/figures/near_duplicate_similarity_diagnostics.png)
+
+![Template families by class](../reports/figures/template_families_by_class.png)
+
+This means a model that sees any part of a template family during training will
+be evaluated on new fills of templates it already knows. That is the main
+limitation of this benchmark and it is reported alongside every result. It is
+also why the raw-text n-gram vectorizers would be trivially perfect here and are
+not used as model inputs.
+
+### Near-duplicate threshold (0.82), derived from the data
+
+Within a template family, two random texts share a lot of phrasing just
+because they come from the same template. A near-duplicate must be *more*
+similar than template-sharing alone explains. Two data-derived criteria were
+used:
+
+1. **Within-family background distribution.** Exact quantiles over all
+   within-family pairs: median 0.571, 99th percentile 0.733, 99.9th 0.770,
+   99.99th **0.801**. The threshold must sit above the 99.99th percentile.
+2. **Single-linkage chaining.** Grouping is transitive, so a threshold that is
+   too low chains whole families together. The largest group is 2,184 rows at
+   0.80 and 1,011 at 0.81, then collapses to **140 at 0.82** (96 at 0.83,
+   31 at 0.85).
+
+0.82 is the lowest grid threshold (0.01 steps) that satisfies both. At 0.82
+there are 47,779 near-duplicate groups; 3,027 rows sit in multi-text groups;
+the largest group has 140 rows; no group mixes labels.
+
+### Train/test and cross-validation split
+
+| Step | Method | Rows before | Rows after |
+| --- | --- | --- | --- |
+| Test hold-out | One fold of `StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=478)` on `NearDup_Group_ID` | 50,000 | train 40,000 / test 10,000 |
+| CV folds | `StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=478)` on the training partition only | 40,000 | 5 × 8,000 |
+
+| Partition | Human | AI | AI proportion |
+| --- | --- | --- | --- |
+| Train | 20,000 | 20,000 | 0.50 |
+| Test | 5,000 | 5,000 | 0.50 |
+| Each CV fold (0–4) | 4,000 | 4,000 | 0.50 |
+
+`build_splits.py` validates that no near-duplicate group crosses the
+train/test boundary or a CV fold, that every training row has a fold, and that
+test rows have `CV_Fold = -1`. No rows are removed by this step.
+
+### Template-family hold-out (stress test)
+
+Because near-duplicate grouping does not stop the same templates from
+appearing on both sides of the split, models are also scored with a second set
+of folds that holds out whole template families
+(`StratifiedGroupKFold(n_splits=5)` on `Template_Family_ID`, training
+partition only; each fold holds out one AI family and one or two Human
+families). This answers a different question: does the model generalize to a
+writing template it has never seen? The test partition is not used for this
+experiment. **Proposed for owner review:** whether the template-family
+hold-out should become the primary evaluation instead of a stress test.
+
+### Split-file schema
+
+| Column | Meaning |
+| --- | --- |
+| `Text_ID` | Join key to `human_ai_text_processed.csv` |
+| `Label`, `Label_Name` | Copied for convenience and validation |
+| `NearDup_Group_ID` | Near-duplicate group at `sim >= 0.82` (0 = largest group) |
+| `NearDup_Group_Size` | Number of texts in that group |
+| `Template_Family_ID` | Template family at `sim >= 0.60` (0–4 AI, 5–10 Human) |
+| `Nearest_Neighbor_Similarity` | Similarity to the most similar other text |
+| `Split` | `train` or `test` |
+| `CV_Fold` | 0–4 for training rows, -1 for test rows |

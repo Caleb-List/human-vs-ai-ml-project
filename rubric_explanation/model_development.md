@@ -15,12 +15,46 @@ will be fit inside the training fold only.
 
 ## Planned models
 
-### 1. Logistic regression
+### 1. Logistic regression — implemented
 
-This is the interpretable linear baseline. Standardization and L2
-regularization will be used inside the pipeline. Coefficients provide a useful
-directional interpretation of the seven summary features. The main tuning
-parameters are regularization strength `C` and, if needed, class weighting.
+Status: trained and evaluated (`src/train_logistic_regression.py`). Results are
+in `model_eval_and_comparison.md`.
+
+**Why this model.** It is the interpretable linear baseline. With seven
+continuous summary features, a linear decision boundary is the simplest
+reasonable hypothesis, and its standardized coefficients show directly which
+text properties push a prediction toward AI or Human. Any more complex model
+must beat it to justify its added complexity.
+
+**Assumptions and characteristics.** The log-odds of AI is modeled as a
+linear function of the features, `log(p / (1 - p)) = b + w · z`, where `z` is
+the standardized feature vector. Observations are assumed independent (which
+is why near-duplicates are kept on one side of every split). It is sensitive to
+feature scale, so a `StandardScaler` is fit inside the pipeline on each
+training fold only. Correlated features make individual coefficients less
+stable; the L1 option lets the tuner drop redundant ones.
+
+**Pipeline.** `StandardScaler -> LogisticRegression(solver="saga",
+max_iter=5000, random_state=478)`.
+
+**Hyperparameters and tuning.**
+
+| Hyperparameter | Values searched | Role |
+| --- | --- | --- |
+| `C` | 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000 | Inverse regularization strength; small `C` = stronger shrinkage |
+| `l1_ratio` | 0 (L2 penalty), 1 (L1 penalty) | L2 shrinks all weights; L1 can set weights exactly to zero |
+
+16 configurations × 5 near-duplicate-group-aware CV folds, selected by mean
+validation ROC-AUC (`GridSearchCV`, `refit="roc_auc"`). Class weighting was not
+tuned because the classes are exactly balanced in every fold.
+`class_weight=None` is used.
+
+**Selected:** `C = 0.1`, L1 penalty. Validation ROC-AUC reaches its plateau
+(about 0.9998) from `C = 0.01` upward for both penalties, and train and
+validation curves overlap at every `C`
+(`reports/figures/logistic_regression_tuning_curve.png`). The L1 penalty set
+the `Text_Guiraud_Root_TTR` coefficient to exactly zero, so lexical diversity
+adds nothing once the other six features are known.
 
 ### 2. Linear support-vector machine
 

@@ -1,0 +1,267 @@
+{
+  "rows": 50000,
+  "similarity": "cosine of binary lowercased word-trigram sets",
+  "trigram_vocabulary": 212844,
+  "max_human_ai_pair_similarity": 0.06,
+  "nearest_neighbor_similarity_quantiles": {
+    "0": 0.5845118761062622,
+    "0.01": 0.626668393611908,
+    "0.5": 0.7567955255508423,
+    "0.99": 0.8528606295585632,
+    "1": 0.9733290076255798
+  },
+  "nearest_neighbor_same_label_rate": 1.0,
+  "family_threshold": 0.6,
+  "family_singletons_attached_to_nearest_neighbor": 6,
+  "template_families": 11,
+  "mixed_label_families": 0,
+  "within_family_pair_similarity_quantiles": {
+    "0.5": 0.5709,
+    "0.9": 0.6807,
+    "0.99": 0.7333,
+    "0.999": 0.7702,
+    "0.9999": 0.8012
+  },
+  "near_dup_threshold": 0.82,
+  "near_dup_groups": 47779,
+  "near_dup_rows_in_multi_text_groups": 3027,
+  "near_dup_largest_group": 140,
+  "near_dup_mixed_label_groups": 0,
+  "threshold_grid": [
+    {
+      "Threshold": 0.75,
+      "Groups": 24058,
+      "Largest_Group": 5039,
+      "Rows_In_Multi_Text_Groups": 26174
+    },
+    {
+      "Threshold": 0.76,
+      "Groups": 25902,
+      "Largest_Group": 4870,
+      "Rows_In_Multi_Text_Groups": 24376
+    },
+    {
+      "Threshold": 0.77,
+      "Groups": 28665,
+      "Largest_Group": 4567,
+      "Rows_In_Multi_Text_Groups": 21710
+    },
+    {
+      "Threshold": 0.78,
+      "Groups": 32491,
+      "Largest_Group": 4055,
+      "Rows_In_Multi_Text_Groups": 18051
+    },
+    {
+      "Threshold": 0.79,
+      "Groups": 37244,
+      "Largest_Group": 3206,
+      "Rows_In_Multi_Text_Groups": 13626
+    },
+    {
+      "Threshold": 0.8,
+      "Groups": 41809,
+      "Largest_Group": 2184,
+      "Rows_In_Multi_Text_Groups": 9297
+    },
+    {
+      "Threshold": 0.81,
+      "Groups": 45606,
+      "Largest_Group": 1011,
+      "Rows_In_Multi_Text_Groups": 5458
+    },
+    {
+      "Threshold": 0.82,
+      "Groups": 47779,
+      "Largest_Group": 140,
+      "Rows_In_Multi_Text_Groups": 3027
+    },
+    {
+      "Threshold": 0.83,
+      "Groups": 48826,
+      "Largest_Group": 96,
+      "Rows_In_Multi_Text_Groups": 1678
+    },
+    {
+      "Threshold": 0.84,
+      "Groups": 49327,
+      "Largest_Group": 63,
+      "Rows_In_Multi_Text_Groups": 970
+    },
+    {
+      "Threshold": 0.85,
+      "Groups": 49607,
+      "Largest_Group": 31,
+      "Rows_In_Multi_Text_Groups": 569
+    },
+    {
+      "Threshold": 0.86,
+      "Groups": 49767,
+      "Largest_Group": 24,
+      "Rows_In_Multi_Text_Groups": 341
+    },
+    {
+      "Threshold": 0.87,
+      "Groups": 49844,
+      "Largest_Group": 14,
+      "Rows_In_Multi_Text_Groups": 236
+    },
+    {
+      "Threshold": 0.88,
+      "Groups": 49911,
+      "Largest_Group": 8,
+      "Rows_In_Multi_Text_Groups": 141
+    },
+    {
+      "Threshold": 0.89,
+      "Groups": 49953,
+      "Largest_Group": 6,
+      "Rows_In_Multi_Text_Groups": 79
+    },
+    {
+      "Threshold": 0.9,
+      "Groups": 49972,
+      "Largest_Group": 4,
+      "Rows_In_Multi_Text_Groups": 50
+    },
+    {
+      "Threshold": 0.91,
+      "Groups": 49984,
+      "Largest_Group": 2,
+      "Rows_In_Multi_Text_Groups": 32
+    }
+  ],
+  "random_state": 478,
+  "split_counts": [
+    {
+      "Split": "test",
+      "Human": 5000,
+      "AI": 5000,
+      "Total": 10000,
+      "AI_Proportion": 0.5
+    },
+    {
+      "Split": "train",
+      "Human": 20000,
+      "AI": 20000,
+      "Total": 40000,
+      "AI_Proportion": 0.5
+    }
+  ],
+  "cv_fold_counts": [
+    {
+      "CV_Fold": 0,
+      "Human": 4000,
+      "AI": 4000,
+      "Total": 8000,
+      "AI_Proportion": 0.5
+    },
+    {
+      "CV_Fold": 1,
+      "Human": 4000,
+      "AI": 4000,
+      "Total": 8000,
+      "AI_Proportion": 0.5
+    },
+    {
+      "CV_Fold": 2,
+      "Human": 4000,
+      "AI": 4000,
+      "Total": 8000,
+      "AI_Proportion": 0.5
+    },
+    {
+      "CV_Fold": 3,
+      "Human": 4000,
+      "AI": 4000,
+      "Total": 8000,
+      "AI_Proportion": 0.5
+    },
+    {
+      "CV_Fold": 4,
+      "Human": 4000,
+      "AI": 4000,
+      "Total": 8000,
+      "AI_Proportion": 0.5
+    }
+  ],
+  "family_counts": [
+    {
+      "Template_Family_ID": 0,
+      "Human": 0,
+      "AI": 5121,
+      "Total": 5121,
+      "AI_Proportion": 1.0
+    },
+    {
+      "Template_Family_ID": 1,
+      "Human": 0,
+      "AI": 5030,
+      "Total": 5030,
+      "AI_Proportion": 1.0
+    },
+    {
+      "Template_Family_ID": 2,
+      "Human": 0,
+      "AI": 4964,
+      "Total": 4964,
+      "AI_Proportion": 1.0
+    },
+    {
+      "Template_Family_ID": 3,
+      "Human": 0,
+      "AI": 4964,
+      "Total": 4964,
+      "AI_Proportion": 1.0
+    },
+    {
+      "Template_Family_ID": 4,
+      "Human": 0,
+      "AI": 4921,
+      "Total": 4921,
+      "AI_Proportion": 1.0
+    },
+    {
+      "Template_Family_ID": 5,
+      "Human": 4266,
+      "AI": 0,
+      "Total": 4266,
+      "AI_Proportion": 0.0
+    },
+    {
+      "Template_Family_ID": 6,
+      "Human": 4234,
+      "AI": 0,
+      "Total": 4234,
+      "AI_Proportion": 0.0
+    },
+    {
+      "Template_Family_ID": 7,
+      "Human": 4200,
+      "AI": 0,
+      "Total": 4200,
+      "AI_Proportion": 0.0
+    },
+    {
+      "Template_Family_ID": 8,
+      "Human": 4143,
+      "AI": 0,
+      "Total": 4143,
+      "AI_Proportion": 0.0
+    },
+    {
+      "Template_Family_ID": 9,
+      "Human": 4105,
+      "AI": 0,
+      "Total": 4105,
+      "AI_Proportion": 0.0
+    },
+    {
+      "Template_Family_ID": 10,
+      "Human": 4052,
+      "AI": 0,
+      "Total": 4052,
+      "AI_Proportion": 0.0
+    }
+  ]
+}
