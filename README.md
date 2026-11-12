@@ -124,15 +124,43 @@ single-class writing templates.
 
 ```bash
 python src/train_logistic_regression.py
+python src/train_random_forest.py
+python src/compare_models.py
 ```
 
-This tunes `C` and the penalty type with group-aware CV, scores the held-out
-test set once, runs a template-family hold-out stress test, and writes metrics
-to `reports/metrics/`, figures to `reports/figures/logistic_regression_*.png`,
-and the fitted pipeline to `models/logistic_regression.joblib` (ignored by Git).
-Results are summarized in `rubric_explanation/model_eval_and_comparison.md`.
-New models should reuse the shared loaders, folds, and metrics in
-`src/modeling.py` so comparisons stay fair.
+Each training script tunes its model with the same group-aware CV folds,
+scores the held-out test set once, runs the template-family hold-out stress
+test, and writes metrics and test predictions to `reports/metrics/`, figures to
+`reports/figures/<model>_*.png`, and the fitted model to `models/<model>.joblib`
+(ignored by Git). Logistic regression takes about 10 seconds. The random
+forest takes about 3 minutes. `compare_models.py` reads the saved results
+(no retraining) and writes a side-by-side table, a McNemar test, and comparison
+figures. Results are summarized in
+`rubric_explanation/model_eval_and_comparison.md`. New models should reuse the
+shared loaders, folds, and metrics in `src/modeling.py` so comparisons stay
+fair.
+
+## Notebooks
+
+The `notebooks/` folder walks through rubric steps 1–4 in order:
+
+| Notebook | Rubric section |
+| --- | --- |
+| `01_problem_and_data_understanding.ipynb` | Problem definition and data understanding |
+| `02_preprocessing_and_features.ipynb` | Preprocessing, features, near-duplicates, split |
+| `03_logistic_regression.ipynb` | Model 1 |
+| `04_random_forest.ipynb` | Model 2 |
+| `05_model_comparison.ipynb` | Evaluation, comparison, error analysis, recommendation |
+
+They are committed with outputs, so they can be read on GitHub without
+running anything. They call the scripts in `src/`, so a notebook and its script
+always produce the same numbers. To run them, finish the data steps above and
+then open the folder in Jupyter or VS Code using the `.venv` kernel, or run
+everything headless:
+
+```bash
+jupyter nbconvert --to notebook --execute --inplace notebooks/*.ipynb
+```
 
 ## Classify a new text snippet
 
@@ -140,6 +168,10 @@ After training, score any text:
 
 ```bash
 python src/predict_text.py "Paste a passage of text here."
+```
+
+```bash
+python src/predict_text.py --model random_forest "Paste a passage of text here."
 ```
 
 It prints the predicted class, the probability that the text is AI-generated,
@@ -174,5 +206,8 @@ In this dataset, `Label` 0 means Human and `Label` 1 means AI. Labels are balanc
 - `src/build_splits.py` builds near-duplicate groups, template families, and the group-aware train/test and CV split.
 - `src/modeling.py` holds the shared data loading, folds, metrics, and plots used by every model.
 - `src/train_logistic_regression.py` tunes and evaluates the logistic-regression baseline.
+- `src/train_random_forest.py` tunes and evaluates the random-forest model.
+- `src/compare_models.py` compares all trained models on the same test rows.
+- `notebooks/` holds the step-by-step rubric notebooks (01–05).
 - `src/predict_text.py` classifies an arbitrary text snippet with a trained model.
 - `data/raw/` holds the original Kaggle file; `data/processed/` is for derived data. Git ignores all of `data/`.
