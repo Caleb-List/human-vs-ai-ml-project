@@ -14,6 +14,7 @@ Evaluation: CV train/validation metrics, a single evaluation on the untouched
 Outputs:
     reports/metrics/logistic_regression_cv_results.csv
     reports/metrics/logistic_regression_metrics.json
+    reports/metrics/logistic_regression_test_predictions.csv
     reports/figures/logistic_regression_*.png
     models/logistic_regression.joblib
 """
@@ -52,6 +53,7 @@ from modeling import (
     plot_confusion_matrix,
     plot_roc_curves,
     predefined_cv,
+    save_test_predictions,
     summarize_cv,
     template_family_holdout,
     train_test_frames,
@@ -165,6 +167,7 @@ def main() -> None:
     train_metrics = classification_metrics(y_train, train_pred, train_score)
     test_metrics = classification_metrics(y_test, test_pred, test_score)
     test_confusion = confusion(y_test, test_pred)
+    save_test_predictions(MODEL_NAME, test, test_pred, test_score)
 
     coefficients = pd.Series(model.named_steps["clf"].coef_[0], index=FEATURE_COLUMNS)
     plot_coefficients(coefficients)
