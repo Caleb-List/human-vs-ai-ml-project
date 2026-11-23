@@ -1,0 +1,595 @@
+{
+  "status": "EXPLORATORY: not a final feature matrix or evaluation split",
+  "dataset": "serjhenrique/m4-multi-generator-domain",
+  "version": 1,
+  "source_records": 68548,
+  "expanded_text_entries": 186032,
+  "expansion_note": "Lists expanded independently; human entries may repeat across generators. No deduplication applied.",
+  "domains": [
+    "arxiv",
+    "peerread",
+    "reddit",
+    "wikihow",
+    "wikipedia"
+  ],
+  "class_counts": {
+    "Human": 106939,
+    "AI": 79093
+  },
+  "missing_or_empty_entries": 8921,
+  "entries_without_source_id": 30000,
+  "raw_machine_prompt_prefix_records": 229,
+  "text_field_counts": {
+    "human_text": 87381,
+    "machine_text": 64753,
+    "machine_abstract": 9000,
+    "text": 9000,
+    "human_reviews": 7558,
+    "abstract": 3000,
+    "machine_answer": 3000,
+    "bloom_reviews": 2340
+  },
+  "candidate_source_groups": 15586,
+  "duplicate_audit": [
+    {
+      "key": "Exact_Text_SHA256",
+      "nonempty_entries": 177111,
+      "unique_texts": 93435,
+      "excess_entries": 83676,
+      "repeated_groups": 14880,
+      "conflicting_label_groups": 0
+    },
+    {
+      "key": "Normalized_Text_SHA256",
+      "nonempty_entries": 177111,
+      "unique_texts": 93228,
+      "excess_entries": 83883,
+      "repeated_groups": 14676,
+      "conflicting_label_groups": 0
+    }
+  ],
+  "files": [
+    {
+      "file": "arxiv_bloomz.jsonl",
+      "sha256": "c0806afab763c5f7a2eaf18f946fc10e78bf1dd7d7fb5817e403ef142b52182d",
+      "records": 3000,
+      "blank_lines": 1,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:NoneType": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:str": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:str": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "arxiv_chatGPT.jsonl",
+      "sha256": "8dbea783239002794f931a088cbd2e9db657a06f0dd9fe4a9cce9511126b5823",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "arxiv_cohere.jsonl",
+      "sha256": "03ca93ab83cf95465f2a083a77084230e43f4aa7c7de783bbfc7ad78c5d59c20",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "arxiv_davinci.jsonl",
+      "sha256": "6432d46bd550adc5253cde51bf22fa499da40f81b2b774174aa837cc0320d842",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "arxiv_dolly.jsonl",
+      "sha256": "568980326733dece55b4b0ef7125f5d874c8bc6c72aac2a665250c57f36f034a",
+      "records": 3000,
+      "blank_lines": 1,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "arxiv_flant5.jsonl",
+      "sha256": "c1709afadc4c2edbe88cd03d83ab5b6fef73beb40ec997723bc2f4d0ab48c027",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "peerread_bloomz.jsonl",
+      "sha256": "66bdfa162550feacbd80822ed6053c8357b96345c969930798259c673e71b925",
+      "records": 585,
+      "blank_lines": 1,
+      "expanded_entries": 9898,
+      "field_shapes": {
+        "human_text:NoneType": 585,
+        "machine_text:NoneType": 585,
+        "prompt:NoneType": 585,
+        "abstract:str": 585,
+        "text:NoneType": 585,
+        "human_reviews:list": 585,
+        "bloom_reviews:list": 585,
+        "machine_abstract:NoneType": 585,
+        "machine_answer:NoneType": 585
+      }
+    },
+    {
+      "file": "peerread_chatgpt.jsonl",
+      "sha256": "870faf1bee8eab270240ce357bebb45df20d551e9fac1b6f4338080d83b70dc2",
+      "records": 586,
+      "blank_lines": 0,
+      "expanded_entries": 8142,
+      "field_shapes": {
+        "human_text:list": 586,
+        "machine_text:list": 586,
+        "prompt:list": 586,
+        "abstract:NoneType": 586,
+        "text:NoneType": 586,
+        "human_reviews:NoneType": 586,
+        "bloom_reviews:NoneType": 586,
+        "machine_abstract:NoneType": 586,
+        "machine_answer:NoneType": 586
+      }
+    },
+    {
+      "file": "peerread_cohere.jsonl",
+      "sha256": "74d3a570f399089b190f2e42ddb36c4acd7c0f8c7f76fbf2fbcd48d45b089a73",
+      "records": 586,
+      "blank_lines": 0,
+      "expanded_entries": 9928,
+      "field_shapes": {
+        "human_text:list": 586,
+        "machine_text:list": 586,
+        "prompt:list": 586,
+        "abstract:NoneType": 586,
+        "text:NoneType": 586,
+        "human_reviews:NoneType": 586,
+        "bloom_reviews:NoneType": 586,
+        "machine_abstract:NoneType": 586,
+        "machine_answer:NoneType": 586
+      }
+    },
+    {
+      "file": "peerread_davinci.jsonl",
+      "sha256": "5b7acc019f61b210ecca736836ac178b7c6f7b7bb8b1bf34af5c37852c7a9915",
+      "records": 586,
+      "blank_lines": 0,
+      "expanded_entries": 8142,
+      "field_shapes": {
+        "human_text:list": 586,
+        "machine_text:list": 586,
+        "prompt:list": 586,
+        "abstract:NoneType": 586,
+        "text:NoneType": 586,
+        "human_reviews:NoneType": 586,
+        "bloom_reviews:NoneType": 586,
+        "machine_abstract:NoneType": 586,
+        "machine_answer:NoneType": 586
+      }
+    },
+    {
+      "file": "peerread_dolly.jsonl",
+      "sha256": "c1ff3fab86ad33fc74df27e7bba61b2a5c6102e328d45f236be96f8b97c63037",
+      "records": 586,
+      "blank_lines": 0,
+      "expanded_entries": 9928,
+      "field_shapes": {
+        "human_text:list": 586,
+        "machine_text:list": 586,
+        "prompt:list": 586,
+        "abstract:NoneType": 586,
+        "text:NoneType": 586,
+        "human_reviews:NoneType": 586,
+        "bloom_reviews:NoneType": 586,
+        "machine_abstract:NoneType": 586,
+        "machine_answer:NoneType": 586
+      }
+    },
+    {
+      "file": "peerread_llama.jsonl",
+      "sha256": "02245667197bcfb894fff5bbd53083ec5d84b012548d377ca2da21cd25d67b44",
+      "records": 586,
+      "blank_lines": 0,
+      "expanded_entries": 9928,
+      "field_shapes": {
+        "human_text:list": 586,
+        "machine_text:list": 586,
+        "prompt:list": 586,
+        "abstract:NoneType": 586,
+        "text:NoneType": 586,
+        "human_reviews:NoneType": 586,
+        "bloom_reviews:NoneType": 586,
+        "machine_abstract:NoneType": 586,
+        "machine_answer:NoneType": 586
+      }
+    },
+    {
+      "file": "reddit_bloomz.jsonl",
+      "sha256": "199432e377f8e69a4ac3084161b7291d9f6dabf723935c387d2db8bb94a4a219",
+      "records": 3000,
+      "blank_lines": 1,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:NoneType": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:str": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:str": 3000
+      }
+    },
+    {
+      "file": "reddit_chatGPT.jsonl",
+      "sha256": "2b7f0e8036ad6c177688cf1f176237dd91a8bc963c032216cc588adf04d3c5e5",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "reddit_cohere.jsonl",
+      "sha256": "5be21903f1a8ece6b5b2e7204ddcae0170d4a9d57a36379d795e9e89077e36e2",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "reddit_davinci.jsonl",
+      "sha256": "0efdd128068143a2a4d78e5b9966afb2c312baf7205db4f8bcee8df13619d605",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "reddit_dolly.jsonl",
+      "sha256": "77442afc865ff0a43e7bd0ad64a5dadf3604ac23e4c3e2751473fe085b7ed3c7",
+      "records": 3000,
+      "blank_lines": 1,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "reddit_flant5.jsonl",
+      "sha256": "8962582e1ac4e4476a9748b623d4b7f49cac7269519fa354eebb008afc15daf0",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "wikihow_bloomz.jsonl",
+      "sha256": "d904fad3602c660afd8f32fe227fab5ba21d8a5dd4479eadeb1fc3420365c569",
+      "records": 3000,
+      "blank_lines": 1,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:NoneType": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:str": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:str": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "wikihow_chatGPT.jsonl",
+      "sha256": "8de4a424158221b2a994fda242690033d771e0a2de18a25de92095726811df61",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "wikihow_cohere.jsonl",
+      "sha256": "0a5b5448257041dd452ff169af48a95e42c260451b7b8cc28f0a3a0ec76064bc",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 2999,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000,
+        "human_text:NoneType": 1
+      }
+    },
+    {
+      "file": "wikihow_davinci.jsonl",
+      "sha256": "dd6ffbc23a5e591261be71f49dc3600f7bd61ff0791f433daf9642f56ce2fc36",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "wikihow_dolly2.jsonl",
+      "sha256": "a5ccd7d0d2fe19e15f7f466c2f4a482b9913d6ae885eb1289cf952686053058b",
+      "records": 3000,
+      "blank_lines": 1,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "wikipedia_bloomz.jsonl",
+      "sha256": "fd93d6e0e5725e691011f9e3200f5713910675bf227efa04c07cc60ae199c17e",
+      "records": 3000,
+      "blank_lines": 1,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:NoneType": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:str": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:str": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "wikipedia_chatgpt.jsonl",
+      "sha256": "cdc15172dd9afcae925c40a7a124ae76d2f96021191460adbb36c9c87415a8c0",
+      "records": 2995,
+      "blank_lines": 0,
+      "expanded_entries": 5990,
+      "field_shapes": {
+        "human_text:str": 2995,
+        "machine_text:str": 2995,
+        "prompt:str": 2995,
+        "abstract:NoneType": 2995,
+        "text:NoneType": 2995,
+        "human_reviews:NoneType": 2995,
+        "bloom_reviews:NoneType": 2995,
+        "machine_abstract:NoneType": 2995,
+        "machine_answer:NoneType": 2995
+      }
+    },
+    {
+      "file": "wikipedia_cohere.jsonl",
+      "sha256": "910fbd3a0c6d4a02fa320ed4fa62989409f9623a981c3db3c8aed25cba417a70",
+      "records": 2336,
+      "blank_lines": 0,
+      "expanded_entries": 4672,
+      "field_shapes": {
+        "human_text:str": 2336,
+        "machine_text:str": 2336,
+        "prompt:str": 2336,
+        "abstract:NoneType": 2336,
+        "text:NoneType": 2336,
+        "human_reviews:NoneType": 2336,
+        "bloom_reviews:NoneType": 2336,
+        "machine_abstract:NoneType": 2336,
+        "machine_answer:NoneType": 2336
+      }
+    },
+    {
+      "file": "wikipedia_davinci.jsonl",
+      "sha256": "2a47a099f898f8990f67f85e9aa8c531311d0e4c1907627203c184bb0413b99f",
+      "records": 3000,
+      "blank_lines": 0,
+      "expanded_entries": 6000,
+      "field_shapes": {
+        "human_text:str": 3000,
+        "machine_text:str": 3000,
+        "prompt:str": 3000,
+        "abstract:NoneType": 3000,
+        "text:NoneType": 3000,
+        "human_reviews:NoneType": 3000,
+        "bloom_reviews:NoneType": 3000,
+        "machine_abstract:NoneType": 3000,
+        "machine_answer:NoneType": 3000
+      }
+    },
+    {
+      "file": "wikipedia_dolly.jsonl",
+      "sha256": "f032a63e51bc7aac9c3ec6b53971c5feb9bce0f7ea5c3543b7f6410fd1ae601d",
+      "records": 2702,
+      "blank_lines": 0,
+      "expanded_entries": 5404,
+      "field_shapes": {
+        "human_text:str": 2702,
+        "machine_text:str": 2702,
+        "prompt:str": 2702,
+        "abstract:NoneType": 2702,
+        "text:NoneType": 2702,
+        "human_reviews:NoneType": 2702,
+        "bloom_reviews:NoneType": 2702,
+        "machine_abstract:NoneType": 2702,
+        "machine_answer:NoneType": 2702
+      }
+    }
+  ],
+  "sample_policy": "Deterministic SHA256 ordering (seed 478), at most N nonempty entries per domain/class; audit only, repeats retained.",
+  "per_domain_class_limit": 500,
+  "row_operations": [
+    {
+      "operation": "Expand English-file text fields (not row deletion)",
+      "before": 68548,
+      "after": 186032
+    },
+    {
+      "operation": "Nonempty eligibility for exploratory feature sample ONLY",
+      "before": 186032,
+      "after": 177111
+    },
+    {
+      "operation": "Deterministic exploratory sampling ONLY",
+      "before": 177111,
+      "after": 5000
+    }
+  ],
+  "sample_feature_missing_counts": {
+    "Text_Word_Count": 0,
+    "Text_Average_Word_Length": 0,
+    "Text_Average_Sentence_Length_Words": 0,
+    "Text_Guiraud_Root_TTR": 0,
+    "Text_Punctuation_Density": 0,
+    "Text_Flesch_Kincaid_Grade_Level": 0,
+    "Text_Burstiness": 0
+  },
+  "pending": [
+    "Confirm prediction unit for list-valued reviews",
+    "Review label mapping and repeated human passages",
+    "Approve sampling, exclusions, schema and output filenames",
+    "Audit prompt remnants and near-duplicates",
+    "Validate source-ID consistency across generators",
+    "Check overlap with original benchmark",
+    "Approve group-aware splits before evaluation"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "logistic_regression": {
+    "stage": "Original-benchmark model -> M4 test, no refitting/scaling/tuning on M4",
+    "model_path": "models\\original_reconstructed\\logistic_regression.joblib",
+    "model_sha256": "a14b5269a33ec51f719b0951235e56ef18cefc14deb57eaed7a5db99c99f00c7",
+    "reconstructed": true,
+    "test_rows": 18678,
+    "test_metrics": {
+      "accuracy": 0.2908234286326159,
+      "precision": 0.8994920174165457,
+      "recall": 0.1604738477472812,
+      "f1": 0.27235772357723576,
+      "roc_auc": 0.6221017519275693,
+      "balanced_accuracy": 0.5373576669076964,
+      "average_precision": 0.8735276922750238,
+      "human_false_positive_rate": 0.08575851393188855,
+      "confusion_matrix": [
+        [
+          2953,
+          277
+        ],
+        [
+          12969,
+          2479
+        ]
+      ]
+    },
+    "processed_sha256": "78f9991ebb5c09041f381b799fa7eb30fa6161ecab5cb25f5e890a48b1d5b78d",
+    "splits_sha256": "558101c3ddd3d1e587a4d82a5239f857ba6ed59c48948c3b2f98e76fc603dadd"
+  },
+  "random_forest": {
+    "stage": "Original-benchmark model -> M4 test, no refitting/scaling/tuning on M4",
+    "model_path": "models\\original_reconstructed\\random_forest.joblib",
+    "model_sha256": "f230831c2738243fbbaa64565ae28f718c21875805ac91d02ab6112bbdfe365b",
+    "reconstructed": true,
+    "test_rows": 18678,
+    "test_metrics": {
+      "accuracy": 0.19418567298425957,
+      "precision": 0.8302828618968386,
+      "recall": 0.03230191610564474,
+      "f1": 0.06218455978565643,
+      "roc_auc": 0.6118509134008752,
+      "balanced_accuracy": 0.5003614843686118,
+      "average_precision": 0.8627648447533784,
+      "human_false_positive_rate": 0.031578947368421054,
+      "confusion_matrix": [
+        [
+          3128,
+          102
+        ],
+        [
+          14949,
+          499
+        ]
+      ]
+    },
+    "processed_sha256": "78f9991ebb5c09041f381b799fa7eb30fa6161ecab5cb25f5e890a48b1d5b78d",
+    "splits_sha256": "558101c3ddd3d1e587a4d82a5239f857ba6ed59c48948c3b2f98e76fc603dadd"
+  }
+}

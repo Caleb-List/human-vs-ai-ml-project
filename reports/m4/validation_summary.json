@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "rows": 93435,
+  "provenance_rows": 177111,
+  "class_counts": {
+    "AI": 77287,
+    "Human": 16148
+  },
+  "source_groups": 13847,
+  "scalar_feature_recomputation_rows": 100,
+  "checks": [
+    "output checksums",
+    "exact schema and counts",
+    "unique IDs/text",
+    "content-derived IDs",
+    "binary target mapping",
+    "finite features",
+    "complete provenance and label mapping",
+    "all known source and normalized-equivalent relationships preserved",
+    "scalar/vectorized feature agreement"
+  ],
+  "scope": "No claim of semantic completeness or validation of an unreviewed similarity threshold"
+}

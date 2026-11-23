@@ -1,0 +1,199 @@
+{
+  "status": "Approved preprocessing artifact; downstream grouping/split/evaluation are recorded separately",
+  "policy": "All nonempty exact-unique texts; no length cuts/downsampling; original seven features",
+  "files": [
+    {
+      "file": "arxiv_bloomz.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "arxiv_chatGPT.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "arxiv_cohere.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "arxiv_davinci.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "arxiv_dolly.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "arxiv_flant5.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "peerread_bloomz.jsonl",
+      "records": 585,
+      "entries": 9898
+    },
+    {
+      "file": "peerread_chatgpt.jsonl",
+      "records": 586,
+      "entries": 8142
+    },
+    {
+      "file": "peerread_cohere.jsonl",
+      "records": 586,
+      "entries": 9928
+    },
+    {
+      "file": "peerread_davinci.jsonl",
+      "records": 586,
+      "entries": 8142
+    },
+    {
+      "file": "peerread_dolly.jsonl",
+      "records": 586,
+      "entries": 9928
+    },
+    {
+      "file": "peerread_llama.jsonl",
+      "records": 586,
+      "entries": 9928
+    },
+    {
+      "file": "reddit_bloomz.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "reddit_chatGPT.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "reddit_cohere.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "reddit_davinci.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "reddit_dolly.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "reddit_flant5.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "wikihow_bloomz.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "wikihow_chatGPT.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "wikihow_cohere.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "wikihow_davinci.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "wikihow_dolly2.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "wikipedia_bloomz.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "wikipedia_chatgpt.jsonl",
+      "records": 2995,
+      "entries": 5990
+    },
+    {
+      "file": "wikipedia_cohere.jsonl",
+      "records": 2336,
+      "entries": 4672
+    },
+    {
+      "file": "wikipedia_davinci.jsonl",
+      "records": 3000,
+      "entries": 6000
+    },
+    {
+      "file": "wikipedia_dolly.jsonl",
+      "records": 2702,
+      "entries": 5404
+    }
+  ],
+  "raw_manifest_sha256": "1606cff0435974a924f30c17e58bf5b16501a856e65981420206c32ce3b7919e",
+  "operations": [
+    {
+      "operation": "Expand passages/reviews",
+      "before": 68548,
+      "after": 186032
+    },
+    {
+      "operation": "Exclude empty/null placeholders",
+      "before": 186032,
+      "after": 177111
+    },
+    {
+      "operation": "Consolidate exact duplicates, preserving every retained origin",
+      "before": 177111,
+      "after": 93435
+    }
+  ],
+  "class_counts": {
+    "AI": 77287,
+    "Human": 16148
+  },
+  "provenance_rows": 177111,
+  "source_groups": 13847,
+  "largest_source_group": 185,
+  "columns": [
+    "Text_ID",
+    "Raw_Text",
+    "Label",
+    "Label_Name",
+    "Text_Word_Count",
+    "Text_Average_Word_Length",
+    "Text_Average_Sentence_Length_Words",
+    "Text_Guiraud_Root_TTR",
+    "Text_Punctuation_Density",
+    "Text_Flesch_Kincaid_Grade_Level",
+    "Text_Burstiness"
+  ],
+  "features": [
+    "Text_Word_Count",
+    "Text_Average_Word_Length",
+    "Text_Average_Sentence_Length_Words",
+    "Text_Guiraud_Root_TTR",
+    "Text_Punctuation_Density",
+    "Text_Flesch_Kincaid_Grade_Level",
+    "Text_Burstiness"
+  ],
+  "output_sha256": {
+    "m4_processed.csv": "78f9991ebb5c09041f381b799fa7eb30fa6161ecab5cb25f5e890a48b1d5b78d",
+    "m4_provenance.csv": "f4920ef5a5467cd12e14079d4ca799a639d74103ef350c6b21d83749307ff6eb",
+    "source_groups_candidate.csv": "6fdafeb4e26e88a34d9afa1ac46c03931df894e192c0a7ea736f3f89e6406470"
+  },
+  "validation": "Unique IDs/texts, both labels, exact schema, finite features; all retained origins mapped"
+}
