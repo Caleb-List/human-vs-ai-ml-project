@@ -4,6 +4,11 @@
 
 ### Added
 
+- Begin the exploratory M4 second-dataset workstream: version-pinned public Kaggle downloader with immutable raw-file verification, provenance-aware audit, separate feature sample and plots, parser tests, and a documented owner-review/partner handoff. Preserve the original benchmark workflow and results.
+- Implement owner-approved M4 exact deduplication, empty-entry exclusion, seven-feature extraction and provenance-preserving source groups. Validate the 93,435-row processed CSV and 177,111 retained origins; complete exact near-duplicate review and owner-approved 0.85 grouping, with a validated 74,757/18,678 split and five group-aware CV folds.
+- Complete original LR/RF reconstruction checks, no-refit transfer to M4, and tuned M4 LR. Add comparison graphics, domain error summaries, and paired whole-group bootstrap intervals. M4 RF retraining was stopped at the owner's request and deferred without a partial result.
+- Add a study narrative to README, detailed M4 methods/results/improvement proposals to the final report, a pinned M4 environment, and HANDOFF.md with the partner's exact starting commands.
+
 - Add `src/train_random_forest.py`: tuned random forest (max_depth x min_samples_leaf x max_features, 36 configs) on the same features, folds, selection metric, and stress test as logistic regression, plus permutation feature importance.
 - Add `src/compare_models.py`: side-by-side metrics for every trained model, test-error overlap, and an exact McNemar test.
 - Add `notebooks/01`–`05`, one per rubric step, committed with executed outputs.

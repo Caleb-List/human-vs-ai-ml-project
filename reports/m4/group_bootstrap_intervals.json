@@ -1,0 +1,119 @@
+{
+  "method": "Paired percentile bootstrap of whole held-out source/near-duplicate groups with replacement",
+  "replicates": 200,
+  "seed": 478,
+  "test_groups": 2758,
+  "scope": "Conditional on fixed trained models/split; does not include retraining/tuning uncertainty or establish across-domain generalization",
+  "models": {
+    "transfer_logistic_regression": {
+      "accuracy": {
+        "estimate": 0.2908234286326159,
+        "lower_95": 0.2827003770770581,
+        "upper_95": 0.29931147072073405
+      },
+      "balanced_accuracy": {
+        "estimate": 0.5373576669076964,
+        "lower_95": 0.5309689564339948,
+        "upper_95": 0.5429763795273506
+      },
+      "f1": {
+        "estimate": 0.27235772357723576,
+        "lower_95": 0.25742718442338697,
+        "upper_95": 0.2876058488110039
+      },
+      "roc_auc": {
+        "estimate": 0.6221017519275693,
+        "lower_95": 0.6133000471470161,
+        "upper_95": 0.6303996393993936
+      },
+      "human_false_positive_rate": {
+        "estimate": 0.08575851393188855,
+        "lower_95": 0.07707847714460216,
+        "upper_95": 0.0968697803897309
+      }
+    },
+    "logistic_regression": {
+      "accuracy": {
+        "estimate": 0.843612806510333,
+        "lower_95": 0.8399357360830353,
+        "upper_95": 0.8470509158639523
+      },
+      "balanced_accuracy": {
+        "estimate": 0.5620349423532939,
+        "lower_95": 0.5566155239749704,
+        "upper_95": 0.5682261441720918
+      },
+      "f1": {
+        "estimate": 0.9130266488015483,
+        "lower_95": 0.9109365581890657,
+        "upper_95": 0.9149035609780197
+      },
+      "roc_auc": {
+        "estimate": 0.7102619714516132,
+        "lower_95": 0.7002707173411886,
+        "upper_95": 0.7206820566725892
+      },
+      "human_false_positive_rate": {
+        "estimate": 0.868421052631579,
+        "lower_95": 0.8562664999920411,
+        "upper_95": 0.8790885365202592
+      }
+    },
+    "transfer_random_forest": {
+      "accuracy": {
+        "estimate": 0.19418567298425957,
+        "lower_95": 0.1904889382407525,
+        "upper_95": 0.19814194339998908
+      },
+      "balanced_accuracy": {
+        "estimate": 0.5003614843686118,
+        "lower_95": 0.4965139193501338,
+        "upper_95": 0.5035328941664635
+      },
+      "f1": {
+        "estimate": 0.06218455978565643,
+        "lower_95": 0.05582174791636305,
+        "upper_95": 0.0683945518774245
+      },
+      "roc_auc": {
+        "estimate": 0.6118509134008752,
+        "lower_95": 0.6008440205198525,
+        "upper_95": 0.6214784371059525
+      },
+      "human_false_positive_rate": {
+        "estimate": 0.031578947368421054,
+        "lower_95": 0.025607427059480273,
+        "upper_95": 0.03810858486071292
+      }
+    }
+  },
+  "paired_differences": {
+    "LR retrained minus transfer": {
+      "accuracy": {
+        "estimate": 0.5527893778777171,
+        "lower_95": 0.5428844056407548,
+        "upper_95": 0.5623173650110017
+      },
+      "balanced_accuracy": {
+        "estimate": 0.024677275445597502,
+        "lower_95": 0.0169248365732247,
+        "upper_95": 0.03448313769542624
+      },
+      "f1": {
+        "estimate": 0.6406689252243125,
+        "lower_95": 0.6249243751864805,
+        "upper_95": 0.6555166368541443
+      },
+      "roc_auc": {
+        "estimate": 0.08816021952404385,
+        "lower_95": 0.07608362852183932,
+        "upper_95": 0.0994293115491431
+      },
+      "human_false_positive_rate": {
+        "estimate": 0.7826625386996904,
+        "lower_95": 0.7662013730400422,
+        "upper_95": 0.7964363744279136
+      }
+    }
+  }
+}

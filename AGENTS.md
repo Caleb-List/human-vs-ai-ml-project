@@ -112,9 +112,43 @@ precision, recall, F1-score, ROC-AUC, confusion matrices, and train/validation
 comparisons. The full model rationale is in
 `rubric_explanation/model_development.md`.
 
-## Current next step
+## Original-workstream checkpoint
 
-Build the near-duplicate similarity groups from `Raw_Text`, derive and justify a
-threshold from the data, and create stratified group-aware train/test and
-cross-validation splits. Do not change the approved feature schema while doing
-this. Record group counts and Human/AI proportions before training models.
+The original near-duplicate grouping, group-aware splits and LR/RF baseline
+evaluations are recorded in the reports. The active M4 continuation is described
+below and in HANDOFF.md; do not repeat the original work as a new next step.
+
+## Owner-approved M4 second-dataset policy (`better-data`)
+
+The original benchmark workflow/results must be preserved in the final report.
+The owner approved the following for the M4 Kaggle version-1 workstream:
+
+- One passage or individual peer review per observation; do not concatenate reviews.
+- Exclude null/empty entries and consolidate exact duplicate texts while preserving
+  all retained origins in a separate provenance table.
+- Keep related source passages and generated variants together across train/test
+  and cross-validation boundaries.
+- Use all nonempty, exactly deduplicated texts, without length cuts/downsampling.
+- Keep the same seven independently derived features and retain raw text only for
+  traceability; identifiers and source/generator metadata are not predictors.
+- Approximately 80/20 stratified group-aware train/test split and five group-aware
+  CV folds; fit any scaler on training folds only.
+- Output `data/processed/m4/m4_processed.csv`, `m4_provenance.csv`, and
+  `m4_splits.csv`; use separate report/model paths.
+
+The owner reviewed the full-corpus diagnostics and approved a 0.85 word-trigram
+cosine threshold for M4 near-duplicate grouping (13,799 combined groups, largest
+216 texts). No rows are deleted by this grouping. Any changed threshold requires
+review rather than being selected from model performance.
+Do not treat an audit sample as an evaluation partition. Original model binaries
+are absent in this checkout; any rebuild from saved settings must be identified
+as a reconstruction and verified against saved original test predictions.
+
+M4 preprocessing, the 74,757/18,678 split, original-model transfer, and M4 LR
+training/evaluation are complete. The owner explicitly requested stopping M4 RF
+training and handing that experiment to the partner. Do not automatically restart
+it during this handoff. A partner can start the documented fresh RF command when
+ready; there is no resumable partial search. Update README and final_project_report.md
+together when adding results. Proposed LR class weighting, training-only threshold
+selection and broader feature/quality experiments remain future work. The current
+test results have been examined; avoid selecting follow-up changes from them.
