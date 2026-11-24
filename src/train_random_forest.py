@@ -272,7 +272,7 @@ def main() -> None:
         print("   ", fold)
     print("\nFeature importance:")
     print(importances.sort_values("permutation_mean", ascending=False).round(4).to_string())
-    print(f"\nWrote metrics to {METRICS_DIR}, figures to {FIGURES_DIR}, model to {MODELS_DIR}")
+    print("\nWrote metrics to reports/metrics/, figures to reports/figures/, model to models/")
 
 
 if __name__ == "__main__":

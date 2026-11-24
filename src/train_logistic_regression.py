@@ -229,7 +229,7 @@ def main() -> None:
     print("\nBenchmark detector reference on test:", {k: round(v, 4) for k, v in detector_auc.items() if k != "note"})
     print("\nStandardized coefficients:")
     print(coefficients.sort_values().round(4).to_string())
-    print(f"\nWrote metrics to {METRICS_DIR}, figures to {FIGURES_DIR}, model to {MODELS_DIR}")
+    print("\nWrote metrics to reports/metrics/, figures to reports/figures/, model to models/")
 
 
 if __name__ == "__main__":

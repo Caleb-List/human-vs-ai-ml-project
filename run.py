@@ -2,7 +2,7 @@
 
     python run.py status            Show what is built and what to run next
     python run.py original          Original 50k benchmark: data -> features -> split -> LR + RF -> comparison
-    python run.py m4                M4 extension: download -> features -> grouping -> split -> LR -> transfer -> summary
+    python run.py m4                M4 extension: download -> features -> grouping -> split -> LR, transfer test, RF -> summary
     python run.py figures           Regenerate the exploratory figures for the original benchmark
     python run.py predict "text"    Classify a text snippet as Human or AI
     python run.py test              Run the unit tests
@@ -65,17 +65,17 @@ M4_STEPS = [
          output=M4 / "m4_processed.csv"),
     Step("Validate the M4 processed CSV", "validate_m4.py"),
     Step("Plot original vs. M4 feature distributions", "plot_m4_comparison.py"),
-    Step("Exhaustive near-duplicate similarity (~35 min the first time)", "audit_m4_similarity.py",
+    Step("Exhaustive near-duplicate similarity (~2-35 min, depending on the machine)", "audit_m4_similarity.py",
          output=M4 / "similarity_edges_exploratory.npz"),
     Step("Build the group-aware M4 split (approved threshold 0.85)", "build_m4_splits.py",
          ("--threshold", "0.85"), output=M4 / "m4_splits.csv"),
-    Step("Tune and evaluate logistic regression on M4 (~8 min)", "train_m4.py",
+    Step("Tune and evaluate logistic regression on M4 (~1-8 min)", "train_m4.py",
          ("--model", "logistic_regression", "--jobs", "2"), output=MODELS / "m4" / "logistic_regression.joblib"),
     Step("Apply the original models to M4 without retraining", "evaluate_m4_transfer.py",
          ("--reconstruct-original",), output=M4 / "transfer_logistic_regression_test_predictions.csv"),
 ]
 
-M4_RF = Step("Tune and evaluate random forest on M4 (long; deferred experiment)", "train_m4.py",
+M4_RF = Step("Tune and evaluate random forest on M4 (~15-30 min)", "train_m4.py",
              ("--model", "random_forest", "--jobs", "4"), output=MODELS / "m4" / "random_forest.joblib")
 
 M4_SUMMARY = Step("Summarize M4 results with group-bootstrap intervals", "summarize_m4_results.py",
@@ -121,7 +121,7 @@ def show_status() -> None:
                 continue
             mark = "x" if step.output.exists() else " "
             print(f"  [{mark}] {step.title}")
-    print("\nNotebooks in notebooks/ and figures in reports/ are committed, so you can read them without running anything.")
+    print("\nproject_notebook.ipynb and the figures in reports/ are committed, so you can read them without running anything.")
     if not (MODELS / "logistic_regression.joblib").exists():
         print("Next: python run.py original   (then: python run.py predict \"some text\")")
     else:
@@ -134,13 +134,12 @@ def main() -> None:
     parser.add_argument("command", choices=["status", "original", "m4", "figures", "predict", "test"])
     parser.add_argument("--force", action="store_true", help="Rebuild every step even if its output exists")
     parser.add_argument("--dry-run", action="store_true", help="Show the steps without running them")
-    parser.add_argument("--with-rf", action="store_true", help="m4 only: also run the long, deferred M4 random forest")
     args, rest = parser.parse_known_args()
 
     if args.command == "predict":
         model = "random_forest" if "random_forest" in rest else "logistic_regression"
         if not (MODELS / f"{model}.joblib").exists():
-            sys.exit(f"No trained {model} model yet. Run this first (about 10-15 minutes):\n  python run.py original")
+            sys.exit(f"No trained {model} model yet. Run this first (about 5-15 minutes):\n  python run.py original")
         sys.exit(subprocess.run([sys.executable, "src/predict_text.py", *rest], cwd=ROOT).returncode)
     if rest:
         parser.error(f"unrecognized arguments: {' '.join(rest)}")
@@ -155,7 +154,7 @@ def main() -> None:
         run_pipeline("Exploratory figures", ORIGINAL_DATA[:2] + FIGURES, args.force, args.dry_run)
     elif args.command == "m4":
         # The transfer step needs the original features/split; the similarity audit reads the original raw CSV.
-        steps = ORIGINAL_DATA + M4_STEPS + ([M4_RF] if args.with_rf else []) + [M4_SUMMARY]
+        steps = ORIGINAL_DATA + M4_STEPS + [M4_RF, M4_SUMMARY]
         run_pipeline("M4 extension", steps, args.force, args.dry_run)
 
 

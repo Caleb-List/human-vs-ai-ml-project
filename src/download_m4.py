@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import urllib.error
 import urllib.request
 import zipfile
 
@@ -29,40 +30,55 @@ def main():
     args = parser.parse_args()
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     archive = args.archive.resolve() if args.archive else RAW_DIR / "m4-v1.zip"
+    source_dir = None
     if not archive.exists():
         if args.archive:
             raise FileNotFoundError(archive)
         temporary = archive.with_suffix(".zip.part")
         print("Downloading public Kaggle M4 version 1...", flush=True)
-        with urllib.request.urlopen(URL, timeout=120) as response, temporary.open("wb") as output:
-            shutil.copyfileobj(response, output)
-        if not zipfile.is_zipfile(temporary):
-            raise ValueError("Kaggle did not return a ZIP. Download v1 in your browser and use --archive.")
-        temporary.replace(archive)
+        try:
+            with urllib.request.urlopen(URL, timeout=120) as response, temporary.open("wb") as output:
+                shutil.copyfileobj(response, output)
+            if not zipfile.is_zipfile(temporary):
+                raise ValueError("Kaggle did not return a ZIP")
+            temporary.replace(archive)
+        except (urllib.error.URLError, ValueError) as error:
+            # Kaggle's direct endpoint can refuse anonymous requests (HTTP 404); KaggleHub
+            # fetches the same pinned version 1 files into its local cache.
+            temporary.unlink(missing_ok=True)
+            print(f"Direct download failed ({error}); using KaggleHub for version 1...", flush=True)
+            import kagglehub
+            source_dir = Path(kagglehub.dataset_download(f"{HANDLE}/versions/1"))
 
-    with zipfile.ZipFile(archive) as bundle:
-        members = [member for member in bundle.infolist() if not member.is_dir()]
-        targets = []
-        for member in members:
-            target = (RAW_DIR / member.filename).resolve()
-            if not target.is_relative_to(RAW_DIR.resolve()):
-                raise ValueError(f"Unsafe archive member: {member.filename}")
-            # Verify existing bytes before accepting a repeated run; never overwrite raw data.
-            if target.exists():
-                with bundle.open(member) as source:
-                    expected = hashlib.file_digest(source, "sha256").hexdigest()
-                if sha256(target) != expected:
-                    raise ValueError(f"Existing raw file differs from archive: {target}")
-            targets.append((member, target))
-        for member, target in targets:
-            if not target.exists():
-                target.parent.mkdir(parents=True, exist_ok=True)
-                with bundle.open(member) as source, target.open("xb") as output:
-                    shutil.copyfileobj(source, output)
+    if source_dir is None:
+        bundle = zipfile.ZipFile(archive)
+        members = [(member.filename, lambda m=member: bundle.open(m)) for member in bundle.infolist() if not member.is_dir()]
+    else:
+        members = [(path.relative_to(source_dir).as_posix(), lambda p=path: p.open("rb"))
+                   for path in sorted(source_dir.rglob("*")) if path.is_file()]
+
+    targets = []
+    for name, open_source in members:
+        target = (RAW_DIR / name).resolve()
+        if not target.is_relative_to(RAW_DIR.resolve()):
+            raise ValueError(f"Unsafe archive member: {name}")
+        # Verify existing bytes before accepting a repeated run; never overwrite raw data.
+        if target.exists():
+            with open_source() as source:
+                expected = hashlib.file_digest(source, "sha256").hexdigest()
+            if sha256(target) != expected:
+                raise ValueError(f"Existing raw file differs from download: {target}")
+        targets.append((open_source, target))
+    for open_source, target in targets:
+        if not target.exists():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with open_source() as source, target.open("xb") as output:
+                shutil.copyfileobj(source, output)
 
     manifest = {
-        "dataset": HANDLE, "version": 1, "download_url": URL,
-        "archive_sha256": sha256(archive),
+        "dataset": HANDLE, "version": 1,
+        "download_url": URL if source_dir is None else f"kagglehub:{HANDLE}/versions/1",
+        "archive_sha256": sha256(archive) if source_dir is None else None,
         "files": [{"path": str(target.relative_to(RAW_DIR)), "bytes": target.stat().st_size,
                    "sha256": sha256(target)} for _, target in targets],
     }
@@ -74,7 +90,7 @@ def main():
     else:
         manifest_path.write_text(serialized, encoding="utf-8")
     print(f"Verified {len(targets)} files in {RAW_DIR}")
-    print("Next: .\\.venv\\Scripts\\python.exe src/audit_m4.py")
+    print("Next: python src/audit_m4.py   (or simply: python run.py m4)")
 
 
 if __name__ == "__main__":

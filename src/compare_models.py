@@ -167,7 +167,7 @@ def main() -> None:
     for pair, info in overlap.items():
         summary = {k: v for k, v in info.items() if k != "both_wrong_text_ids"}
         print(f"\n{pair}: {summary}")
-    print(f"\nWrote {METRICS_DIR / 'model_comparison.csv'} and comparison figures.")
+    print("\nWrote reports/metrics/model_comparison.csv and comparison figures.")
 
 
 if __name__ == "__main__":
