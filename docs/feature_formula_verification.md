@@ -30,7 +30,7 @@ for the local rows, up to floating-point representation. This is ordinary type-t
 
 ### Flesch-Kincaid Grade Level
 
-The standard equation in the screenshot is correct. A source implementation such as `textstat` documents the same equation, but library behavior still depends on its tokenizer, sentence counter, syllable algorithm, language, and rounding. The local stored feature is close but not identical when calculated from the stored intermediate averages. This suggests a different implementation detail, rounding before aggregation, or a dataset-generation inconsistency.
+The standard Flesch-Kincaid equation proposed for this feature is correct. A source implementation such as `textstat` documents the same equation, but library behavior still depends on its tokenizer, sentence counter, syllable algorithm, language, and rounding. The local stored feature is close but not identical when calculated from the stored intermediate averages. This suggests a different implementation detail, rounding before aggregation, or a dataset-generation inconsistency.
 
 ### Stopword and functional-grammar features
 
