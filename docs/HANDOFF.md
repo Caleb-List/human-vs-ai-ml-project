@@ -1,35 +1,20 @@
-# Partner handoff: start here
+# Team handoff: current state and next steps
 
 ## Checkpoint
 
-The original benchmark experiment is preserved. M4 preprocessing, source and near-duplicate grouping, the train/test and CV split, original-model transfer, and M4 Logistic Regression are complete. **M4 Random Forest retraining was stopped at the owner's request and is your next model experiment.** Its partial search was not saved; start a fresh search. Do not treat the original RF transfer result as a retrained M4 RF result.
+Both experiments are complete. The original benchmark experiment is preserved. On M4, preprocessing, source and near-duplicate grouping, the train/test and CV split, original-model transfer, and **both retrained models (LR and RF)** are complete. The M4 RF, first stopped at the owner's request, was rerun from scratch on the approved features, folds and grid. The same full rerun reproduced the split and M4 LR results exactly. **The random forest is the recommended model** (final report section 11.7b).
 
-Read the [README](../README.md) first for a summary, then the [final report](../final_project_report.md) for detailed decisions and figures. [M4 procedure and data dictionary](m4_dataset_review.md) contains implementation details. Both main documents should be updated when new results are added.
+Read the [README](../README.md) first for a summary, then [project_notebook.ipynb](../project_notebook.ipynb) for the step-by-step walkthrough, and the [final report](../final_project_report.md) for detailed decisions and figures. [M4 procedure and data dictionary](m4_dataset_review.md) contains implementation details. Update the README, notebook and report together when new results are added.
 
-## First action on this computer
+## Rebuilding everything
 
-The approved local data and split already exist. From the repository root:
-
-```powershell
-.\.venv\Scripts\python.exe src/validate_m4.py
-.\.venv\Scripts\python.exe src/train_m4.py --model random_forest --jobs 4
-```
-
-This trains 36 configurations across five stored group-aware folds (180 fits), with 300 trees per forest. Four workers limit CPU/memory contention. It can take substantially longer than the original benchmark's three-minute RF run. There is no need to repeat feature extraction, regenerate splits, or rerun the full similarity audit on this checkout first. The training script validates its input checksums and split invariants before fitting.
-
-After RF succeeds:
-
-```powershell
-.\.venv\Scripts\python.exe src/summarize_m4_results.py --bootstrap 200
-```
-
-Then update the results and interpretation in **both README.md and final_project_report.md**, replacing the deferred RF status with measured scores, CV train/validation comparisons, Human false positives, and the new paired comparison. Preserve all original and transfer results.
+From the repository root, `python run.py original` and then `python run.py m4` rebuild all data, models and reports; finished steps are skipped. Run `python run.py status` to see what is already built.
 
 ## If you are using a fresh clone or another computer
 
 `data/` and `models/` are ignored by Git. Code and reports alone do not contain the processed CSVs, trained models, per-row M4 predictions, or similarity cache. Run `python run.py m4` (see the README), using Python 3.12 and `requirements-m4-lock.txt`. Download/rebuild original benchmark features too if reconstructing original models for transfer. The Kaggle M4 download is pinned to version 1 and worked without credentials in this checkout.
 
-The first exhaustive similarity comparison took about 33 minutes plus vector construction. Reusing a checksum-matched local cache is much quicker. If local artifacts are transferred between collaborators, validate them against their manifests before use and resolve source redistribution terms; do not add raw datasets or credentials to Git.
+The first exhaustive similarity comparison took about 33 minutes on the original Windows machine and about 2 minutes on a 14-core Mac. Reusing a checksum-matched local cache is much quicker. If local artifacts are transferred between collaborators, validate them against their manifests before use and resolve source redistribution terms; do not add raw datasets or credentials to Git.
 
 ## Approved policy: keep this baseline reproducible
 
@@ -51,16 +36,17 @@ The group-aware split has 13,799 combined groups, largest 216 texts. Test compos
 | Original LR transferred to M4 | 29.08% | 0.6221 | 53.74% | 8.58% |
 | Original RF transferred to M4 | 19.42% | 0.6119 | 50.04% | 3.16% |
 | LR retrained on M4 | 84.36% | 0.7103 | 56.20% | 86.84% |
+| **RF retrained on M4** | **87.95%** | **0.9078** | **71.53%** | **53.56%** |
 
-The original benchmark scores were approximately 99.5% accuracy. Transfer failure shows those scores do not establish general authorship detection. M4 LR ranking improves after retraining, but its default threshold favors AI heavily. Always predicting AI already obtains 82.71% accuracy. Its 99.25% AI recall and 0.913 AI F1 therefore do not make it a satisfactory detector of Human text.
+The original benchmark scores were approximately 99.5% accuracy. Transfer failure shows those scores do not establish general authorship detection. M4 LR ranking improves after retraining, but its default threshold favors AI heavily. Always predicting AI already obtains 82.71% accuracy. Its 99.25% AI recall and 0.913 AI F1 therefore do not make it a satisfactory detector of Human text. The retrained RF is better on every metric (paired bootstrap intervals exclude zero), but it still wrongly flags about half of Human texts at the 0.5 threshold.
 
-LR selected `C=1000`, L1 by mean training-CV ROC-AUC. CV train/validation ROC-AUCs are approximately 0.7130/0.7129, versus 0.7103 test. This is limited discrimination with little observed train/validation gap, not evidence that a near-perfect detector has been obtained. The completed LR search took about 7.8 minutes with two workers.
+LR selected `C=1000`, L1 by mean training-CV ROC-AUC. CV train/validation ROC-AUCs are approximately 0.7130/0.7129, versus 0.7103 test. This is limited discrimination with little observed train/validation gap, not evidence that a near-perfect detector has been obtained. The completed LR search took about 7.8 minutes with two workers. The RF selected fully grown trees with `min_samples_leaf=10` and `max_features=7`; CV train/validation ROC-AUC is 0.9752/0.9039 versus 0.9078 test, so it overfits moderately but its validation estimate holds on test. Its 180-fit search took about 14 minutes with eight workers on a 14-core Mac.
 
-Original model binaries were absent, so transfer uses explicitly reconstructed models with saved original settings and training membership. Both reproduce all 10,000 original saved test classifications. Versions and probability differences are recorded; do not claim the historical binaries were recovered.
+Transfer was first run with explicitly reconstructed models, because the original binaries were absent on that machine. Both reproduce all 10,000 original saved test classifications. The later rerun used the original trained binaries and matched the reconstructed transfer scores to within 0.00001 ROC-AUC.
 
-## Regression improvement experiments after the current comparison
+## Improvement experiments after the current comparison
 
-1. Test `class_weight="balanced"` against the unweighted LR using the **existing training folds**. Record balanced accuracy, Human false-positive rate, AI recall, precision and ROC-AUC, rather than optimizing accuracy or AI F1 alone.
+1. Test `class_weight="balanced"` against the unweighted LR and RF using the **existing training folds**. Record balanced accuracy, Human false-positive rate, AI recall, precision and ROC-AUC, rather than optimizing accuracy or AI F1 alone.
 2. Choose a decision threshold using **out-of-fold training probabilities** and an owner-agreed false-positive/recall objective. Threshold changes can alter the confusion matrix, but do not improve ROC-AUC of fixed scores.
 3. Inspect the saved grid. `C=1000` is an edge optimum, but a flat validation curve may make a larger search unhelpful. Compare mean and fold variation.
 4. Review `test_errors_by_domain.csv` and consider text-length slices. Use these as descriptive error analysis, not as a basis for silently deleting test rows.
@@ -79,13 +65,14 @@ These are future proposals, not implemented performance improvements. The test s
 | `reports/m4/original_reconstruction.json` | Reconstruction checks against original predictions |
 | `reports/m4/transfer_metrics.json` | No-refit original-model transfer results |
 | `reports/m4/logistic_regression_metrics.json` | M4 LR settings, train/CV/test metrics, coefficients, runtime and versions |
-| `reports/m4/model_comparison.csv` | Comparable completed stages; no invented deferred-model result |
+| `reports/m4/random_forest_metrics.json` | M4 RF settings, train/CV/test metrics, importances, runtime and versions |
+| `reports/m4/model_comparison.csv` | All comparable stages for both models |
 | `reports/m4/group_bootstrap_intervals.json` | Whole-group paired uncertainty; conditional on fixed models/split |
 | `reports/m4/test_errors_by_domain.csv` | Descriptive domain-level performance |
 | `data/processed/m4/m4_provenance.csv` | Every retained raw origin mapped to canonical text |
-| `models/m4/logistic_regression.joblib` | Completed M4 LR pipeline (local, ignored by Git) |
+| `models/m4/*.joblib` | Completed M4 LR and RF pipelines (local, ignored by Git) |
 
-The summary handles the completed LR and both transfer models while RF is deferred. Once RF artifacts exist, rerun it to include RF and paired comparisons. Group-bootstrap intervals do not include retraining or split-selection uncertainty.
+The summary covers both retrained models and both transfer models, with paired comparisons. Group-bootstrap intervals do not include retraining or split-selection uncertainty.
 
 ## Known limitations and final checks
 
@@ -93,8 +80,8 @@ Some M4 generations contain copied prompt material, repeated number sequences, a
 
 Focused tests cover parsing, label conflicts, provenance bridges, exact similarity, split boundaries and training-only scaling. Run them after implementation changes:
 
-```powershell
-.\.venv\Scripts\python.exe -m unittest discover -s tests
+```bash
+python run.py test
 git diff --check
 ```
 

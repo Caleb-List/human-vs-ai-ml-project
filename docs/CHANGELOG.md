@@ -4,6 +4,8 @@
 
 ### Added
 
+- Complete the deferred M4 random forest: a fresh 36-configuration search on the approved features and folds (test ROC-AUC 0.9078, balanced accuracy 0.7153, Human false-positive rate 0.5356). It is better than M4 LR on every metric, with paired group-bootstrap intervals that exclude zero. Add it to the summary, report (section 11.7b), README, HANDOFF and evaluation doc, with an overall model recommendation (random forest). A full M4 rerun on a second computer reproduced the split and M4 LR results exactly.
+- Add `project_notebook.ipynb`, one notebook covering rubric steps 1–4 for both datasets (replaces `notebooks/01`–`05`), with an M4 part and the final recommendation.
 - Begin the exploratory M4 second-dataset workstream: version-pinned public Kaggle downloader with immutable raw-file verification, provenance-aware audit, separate feature sample and plots, parser tests, and a documented owner-review/partner handoff. Preserve the original benchmark workflow and results.
 - Implement owner-approved M4 exact deduplication, empty-entry exclusion, seven-feature extraction and provenance-preserving source groups. Validate the 93,435-row processed CSV and 177,111 retained origins; complete exact near-duplicate review and owner-approved 0.85 grouping, with a validated 74,757/18,678 split and five group-aware CV folds.
 - Complete original LR/RF reconstruction checks, no-refit transfer to M4, and tuned M4 LR. Add comparison graphics, domain error summaries, and paired whole-group bootstrap intervals. M4 RF retraining was stopped at the owner's request and deferred without a partial result.
@@ -28,6 +30,7 @@
 
 ### Changed
 
+- `download_m4.py` falls back to KaggleHub when Kaggle's direct download returns 404 for anonymous requests; all 28 files match the recorded version 1 checksums. `data_loader.py` no longer fails when `data/raw/` already has files. `run.py m4` now includes the M4 random forest. Scripts print output paths relative to the project.
 - Prepare the repository for peer review. Add `run.py`, one entry point for every task (`status`, `original`, `m4`, `figures`, `predict`, `test`) that skips steps that are already built. Shorten the README to a summary, results, reading guide and quickstart; the full study narrative stays in `final_project_report.md`. Move `rubric_explanation/*`, `observations/formal_tone_score.md`, `HANDOFF.md`, `CHANGELOG.md` and `project_rubric.pdf` into `docs/` with an index, and update all links. Add a table of contents to the report and turn the section 8 to-do list into a status table. No code, data, feature, split or result changes.
 
 - Move CV summaries, the template-family hold-out, and the detector reference into `src/modeling.py` so all models share them (logistic-regression results unchanged).

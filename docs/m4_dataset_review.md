@@ -139,18 +139,16 @@ Original model binaries are absent in this checkout. The original processed matr
 
 ## Completed M4 models and handoff status
 
-The validated split has 74,757 training and 18,678 test texts. Both original-model transfer evaluations and M4 LR are complete. Transfer LR/RF ROC-AUCs are 0.6221/0.6119. Retrained LR selected L1 with `C=1000` from the original 16-setting grid using the five fixed training folds. Test accuracy is 0.8436, ROC-AUC 0.7103, balanced accuracy 0.5620, and Human false-positive rate 0.8684. The majority-class test accuracy is 0.8271. These results are interpreted in the final report; accuracy or positive-class F1 alone would obscure the Human error rate.
+The validated split has 74,757 training and 18,678 test texts. Both original-model transfer evaluations, M4 LR and M4 RF are complete. Transfer LR/RF ROC-AUCs are 0.6221/0.6119. Retrained LR selected L1 with `C=1000` from the original 16-setting grid using the five fixed training folds. Test accuracy is 0.8436, ROC-AUC 0.7103, balanced accuracy 0.5620, and Human false-positive rate 0.8684. The majority-class test accuracy is 0.8271. These results are interpreted in the final report; accuracy or positive-class F1 alone would obscure the Human error rate.
 
-The owner requested stopping M4 RF retraining and deferring it to the partner. Its verified parent and all workers were terminated. There is no completed M4-trained RF artifact or resumable partial search. The original RF transfer result remains valid and is a separate experiment.
+M4 RF retraining, first stopped at the owner's request, was later rerun from scratch on the same features, folds and 36-setting grid. It selected fully grown trees with `min_samples_leaf=10` and `max_features=7`. Test accuracy is 0.8795, ROC-AUC 0.9078, balanced accuracy 0.7153, and Human false-positive rate 0.5356; CV train/validation ROC-AUC is 0.9752/0.9039. The same rerun reproduced the split and M4 LR results exactly. The original RF transfer result remains a separate experiment.
 
-The results summary handles the available models, checks identical M4 test IDs, labels and groups, and writes a comparison plot, domain-level errors and 200 paired whole-group bootstrap intervals. It can be rerun after the partner finishes RF. The local data/model files are ignored by Git; reports, code, environment snapshot and reproduction instructions support a new checkout.
+The results summary handles the available models, checks identical M4 test IDs, labels and groups, and writes a comparison plot, domain-level errors and 200 paired whole-group bootstrap intervals. The local data/model files are ignored by Git; reports, code, environment snapshot and reproduction instructions support a new checkout.
 
-## Partner next steps
+## Next steps
 
 1. Start with [HANDOFF.md](HANDOFF.md). Validate the existing local artifacts, or reproduce data on a fresh checkout using README and the environment lock.
-2. Start a fresh RF search on the approved feature matrix and stored folds: `python src/train_m4.py --model random_forest --jobs 4`.
-3. Rerun `python src/summarize_m4_results.py --bootstrap 200` and update both README and final_project_report.md with measured RF results.
-4. Consider the documented LR class-weighting and training-only threshold experiments. Inspect the regularization plateau before expanding C.
-5. Plan domain/generator holdouts, quality sensitivity and alternative feature comparisons under the owner's review policy. The current test has already been examined; do not tune new decisions against its scores.
+2. Consider the documented class-weighting and training-only threshold experiments. Inspect the regularization plateau before expanding C.
+3. Plan domain/generator holdouts, quality sensitivity and alternative feature comparisons under the owner's review policy. The current test has already been examined; do not tune new decisions against its scores.
 
 The original training scripts retain their original paths, template-family stress tests and benchmark-detector references. `src/train_m4.py` reuses their estimator builders and parameter grids with separate M4 data, groups, outputs and models. It adds balanced accuracy, average precision, human false-positive rate, and the majority-class baseline because exact deduplication leaves substantial imbalance. Do not overwrite original paths or assume original benchmark scores describe M4.

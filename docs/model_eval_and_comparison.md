@@ -26,7 +26,7 @@ Positive class = AI (`Label = 1`).
 
 ## Model 1: Logistic regression
 
-Script: `src/train_logistic_regression.py`. Notebook: `notebooks/03_logistic_regression.ipynb`. Selected configuration: L1 penalty, `C = 0.1` (tuning details in `model_development.md`).
+Script: `src/train_logistic_regression.py`. Notebook: `project_notebook.ipynb` (Part 3). Selected configuration: L1 penalty, `C = 0.1` (tuning details in `model_development.md`).
 
 ### Results
 
@@ -86,7 +86,7 @@ Near-perfect scores here mean the benchmark's 11 generator templates are separab
 
 ## Model 2: Random forest
 
-Script: `src/train_random_forest.py`. Notebook: `notebooks/04_random_forest.ipynb`. Selected configuration: 300 trees, `max_depth = None`, `min_samples_leaf = 1`, `max_features = 2` (tuning details in `model_development.md`).
+Script: `src/train_random_forest.py`. Notebook: `project_notebook.ipynb` (Part 3). Selected configuration: 300 trees, `max_depth = None`, `min_samples_leaf = 1`, `max_features = 2` (tuning details in `model_development.md`).
 
 ### Results
 
@@ -133,7 +133,7 @@ The forest relies on the same three features that logistic regression weights mo
 
 ## Comparison
 
-Script: `src/compare_models.py`. Notebook: `notebooks/05_model_comparison.ipynb`. Both models used the same features, split, CV folds, selection metric, and stress test.
+Script: `src/compare_models.py`. Notebook: `project_notebook.ipynb` (Part 4). Both models used the same features, split, CV folds, selection metric, and stress test.
 
 | Stage | LR accuracy | RF accuracy | LR F1 | RF F1 | LR ROC-AUC | RF ROC-AUC |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -164,7 +164,7 @@ Errors are not random. They are concentrated in two templates:
 
 Family 10 has the highest reading grade of the human templates (median 12.2), and family 0 has the lowest of the AI templates (median 15.2). Both models fail where the two classes' styles overlap on the strongest feature. The same pair drives the worst template-family hold-out fold for both models (LR 0.965, RF 0.960 accuracy).
 
-### Recommendation (draft for team review)
+### Recommendation for the original benchmark (draft for team review)
 
 **Logistic regression.**
 
@@ -172,6 +172,28 @@ Family 10 has the highest reading grade of the human templates (median 12.2), an
 - Logistic regression generalizes slightly better to unseen templates, which is the closest proxy for new data that this benchmark offers.
 - It has no train/validation gap, gives signed and directly explainable coefficients, and its full tuning grid runs in about 10 seconds versus about 3 minutes for the forest.
 - The forest is still useful as a check: a much more flexible model found almost no additional signal and ranked the same features highest. So the linear boundary isn't leaving much on the table.
+
+## Second dataset: M4 (generalization test)
+
+The original benchmark is built from 11 templates, so both models were also evaluated on M4, an independently collected, multi-domain corpus (93,435 texts, 83% AI). The same seven features, grids and protocol were used. All rows below are on the same 18,678 M4 test texts. Full details and intervals are in the [final report](../final_project_report.md), sections 11.6–11.7b, and in Part 5 of `project_notebook.ipynb`.
+
+Because M4 is imbalanced, accuracy alone is misleading (always guessing AI scores 82.71%). We therefore add **balanced accuracy** and the **Human false-positive rate** (the share of Human texts wrongly called AI).
+
+| Model | Accuracy | ROC-AUC | Balanced accuracy | Human false-positive rate | CV train / validation ROC-AUC |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Original LR, no retraining | 0.2908 | 0.6221 | 0.5374 | 0.0858 | — |
+| Original RF, no retraining | 0.1942 | 0.6119 | 0.5004 | 0.0316 | — |
+| LR retrained on M4 | 0.8436 | 0.7103 | 0.5620 | 0.8684 | 0.7130 / 0.7129 |
+| RF retrained on M4 | **0.8795** | **0.9078** | **0.7153** | **0.5356** | 0.9752 / 0.9039 |
+
+- **Transfer fails.** The near-perfect original models drop to ROC-AUC of about 0.61–0.62 on M4.
+- **LR underfits** (train = validation = 0.71 ROC-AUC): a linear boundary on these features cannot separate M4's classes.
+- **RF overfits moderately** (0.975 train vs. 0.904 validation ROC-AUC), but validation matches test (0.908), so its estimate is reliable.
+- **RF is better on every metric**, and paired group-bootstrap intervals exclude zero (ROC-AUC +0.198 [+0.188, +0.209], Human false-positive rate −0.333 [−0.351, −0.317]).
+
+### Recommendation including M4
+
+We recommend the **random forest**. On the original benchmark the two models tied and LR was preferred for simplicity. M4, the more realistic test, shows that the forest's flexibility is what lets the same seven features carry real signal. Neither model is a usable detector at the 0.5 threshold, since even the forest wrongly flags 54% of Human texts. Threshold selection and class weighting are the next steps.
 
 ## Models 3–5
 

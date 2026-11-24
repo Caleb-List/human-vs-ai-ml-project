@@ -35,7 +35,7 @@ This is a second linear margin-based model with a different optimization objecti
 
 ### 3. Random forest — implemented
 
-Status: trained and evaluated (`src/train_random_forest.py`, `notebooks/04_random_forest.ipynb`). It was built second, ahead of the linear SVM, because it is the most different from logistic regression. Results are in `model_eval_and_comparison.md`.
+Status: trained and evaluated (`src/train_random_forest.py`, `project_notebook.ipynb` (Part 3)). It was built second, ahead of the linear SVM, because it is the most different from logistic regression. Results are in `model_eval_and_comparison.md`.
 
 **Why this model.** It is a nonlinear contrast to the linear baseline. Trees can represent threshold effects and feature interactions that a linear boundary cannot. If the forest found much more signal, that would show the linear model was leaving information unused. It also gives feature importances that can be checked against the logistic-regression coefficients.
 

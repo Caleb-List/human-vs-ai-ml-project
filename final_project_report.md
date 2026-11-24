@@ -4,9 +4,9 @@
 
 **Course:** CSCE 478/878 — Intro to Machine Learning  
 **Task:** Binary classification of human-written versus AI-generated text  
-**Status:** Original study, M4 preprocessing/splits, transfer evaluation and M4 LR complete; M4 RF deferred to partner
+**Status:** Original study and M4 extension complete: preprocessing, splits, transfer evaluation, and LR and RF retrained on M4. Recommended model: random forest (section 11.7b)
 
-**Contents:** Part A, original benchmark — [1 Problem](#1-problem-definition) · [2 Data](#2-dataset-and-data-understanding) · [3 Feature policy](#3-approved-feature-policy) · [4 Formal tone](#4-formal-tone-exclusion) · [5 Features](#5-text-derived-feature-definitions) · [6 Redundancy](#6-redundancy-analysis) · [7 Near-duplicates](#7-duplicate-and-near-duplicate-controls) · [7a LR](#7a-first-model-result-logistic-regression) · [7b RF](#7b-second-model-random-forest-and-comparison) · [8 Plan](#8-leakage-aware-preprocessing-plan) · [9 Models](#9-model-development-handoff) · [10 Limitations](#10-original-benchmark-limitations-and-reason-for-a-second-dataset) <br> Part B, M4 extension — [11 M4](#11-second-dataset-m4) · [11.6 Transfer](#116-evaluation-design-and-transfer-results) · [11.7 M4 LR](#117-m4-logistic-regression-result-and-interpretation) · [11.8 Next steps](#118-proposed-regression-improvements-and-partner-starting-point) · [12 Done criteria](#12-current-definition-of-done)
+**Contents:** Part A, original benchmark — [1 Problem](#1-problem-definition) · [2 Data](#2-dataset-and-data-understanding) · [3 Feature policy](#3-approved-feature-policy) · [4 Formal tone](#4-formal-tone-exclusion) · [5 Features](#5-text-derived-feature-definitions) · [6 Redundancy](#6-redundancy-analysis) · [7 Near-duplicates](#7-duplicate-and-near-duplicate-controls) · [7a LR](#7a-first-model-result-logistic-regression) · [7b RF](#7b-second-model-random-forest-and-comparison) · [8 Plan](#8-leakage-aware-preprocessing-plan) · [9 Models](#9-model-development-handoff) · [10 Limitations](#10-original-benchmark-limitations-and-reason-for-a-second-dataset) <br> Part B, M4 extension — [11 M4](#11-second-dataset-m4) · [11.6 Transfer](#116-evaluation-design-and-transfer-results) · [11.7 M4 LR](#117-m4-logistic-regression-result-and-interpretation) · [11.7b M4 RF and recommendation](#117b-m4-random-forest-result-and-model-recommendation) · [11.8 Next steps](#118-proposed-improvements-and-next-steps) · [12 Done criteria](#12-current-definition-of-done)
 
 ## 1. Problem definition
 
@@ -165,7 +165,7 @@ A standardized, L1-regularized logistic regression (`C = 0.1`, chosen by group-a
 
 ## 7b. Second model: random forest, and comparison
 
-A 300-tree random forest (fully grown trees, `max_features = 2`, chosen by the same group-aware CV over 36 configurations) reaches 0.9952 test accuracy and 0.9999 ROC-AUC. It fits the training data perfectly (validation 0.9975), and on unseen templates it is slightly worse than logistic regression (0.9859 vs. 0.9888). It makes 48 test errors versus 56 for logistic regression, but an exact McNemar test finds the difference not significant (p = 0.27). Both models make almost all of their errors in two templates: the most formal human template and the least formal AI template. Permutation importance ranks the same three features highest as the logistic-regression coefficients. The draft recommendation is logistic regression: the same accuracy within noise, better generalization to unseen templates, no overfitting gap, and directly interpretable. Walkthrough: `notebooks/05_model_comparison.ipynb`.
+A 300-tree random forest (fully grown trees, `max_features = 2`, chosen by the same group-aware CV over 36 configurations) reaches 0.9952 test accuracy and 0.9999 ROC-AUC. It fits the training data perfectly (validation 0.9975), and on unseen templates it is slightly worse than logistic regression (0.9859 vs. 0.9888). It makes 48 test errors versus 56 for logistic regression, but an exact McNemar test finds the difference not significant (p = 0.27). Both models make almost all of their errors in two templates: the most formal human template and the least formal AI template. Permutation importance ranks the same three features highest as the logistic-regression coefficients. The draft recommendation is logistic regression: the same accuracy within noise, better generalization to unseen templates, no overfitting gap, and directly interpretable. Walkthrough: `project_notebook.ipynb` (Part 4).
 
 ## 8. Leakage-aware preprocessing plan
 
@@ -369,7 +369,7 @@ The study uses two evaluation types on the same M4 held-out test rows:
 1. Original-benchmark models applied without refitting their features, scalers, parameters, or decision thresholds on M4: a transfer test.
 2. LR and RF retrained and tuned only on M4 training folds: an in-corpus comparison.
 
-The original trained binaries were absent locally. Both models were reconstructed from their saved selected parameters and original 40,000 training IDs, without retuning. Both reproduce all 10,000 saved original test classifications. The reconstruction report records probability differences and library versions; these are not claimed to be the historical binary files. They will remain unchanged during transfer evaluation.
+The original trained binaries were absent locally. Both models were reconstructed from their saved selected parameters and original 40,000 training IDs, without retuning. Both reproduce all 10,000 saved original test classifications. The reconstruction report records probability differences and library versions; these are not claimed to be the historical binary files. They will remain unchanged during transfer evaluation. A later full rerun of the M4 pipeline on a second computer, where the original trained binaries were available, reproduced the split and LR results exactly and the transfer scores to within 0.00001 ROC-AUC, confirming the reconstruction.
 
 Transfer evaluation is complete on all 18,678 M4 test texts, with no refitting, M4-based scaling, parameter tuning, or decision-threshold changes:
 
@@ -412,7 +412,7 @@ At the default threshold, the classifier detects 99.25% of AI texts while incorr
 
 ![Original study and M4 comparison](reports/m4/study_model_comparison.png)
 
-*Figure 13. Original-benchmark reference, transfer and M4 retraining. Original test bars use a different corpus; the ROC panel uses the same M4 test rows for all displayed models. Missing M4-retrained RF bars indicate deferred work, not zero performance. Dotted accuracy references show the relevant majority baselines.*
+*Figure 13. Original-benchmark reference, transfer and M4 retraining for both models. Original test bars use a different corpus; the ROC panel uses the same M4 test rows for all displayed models. Dotted accuracy references show the relevant majority baselines.*
 
 For uncertainty, 200 paired bootstrap replicates resample whole held-out source/near-duplicate groups, using seed 478. This retains within-group dependence and uses identical resamples for compared models. Approximate percentile 95% intervals for M4 LR are accuracy [0.8399, 0.8471], balanced accuracy [0.5566, 0.5682], ROC-AUC [0.7003, 0.7207], and Human false-positive rate [0.8563, 0.8791]. The paired retrained-minus-transfer LR ROC-AUC difference is 0.0882, with interval [0.0761, 0.0994]. These intervals condition on fixed trained models and the selected split; they do not include retraining/tuning uncertainty or establish generalization to unseen domains/generators.
 
@@ -428,19 +428,55 @@ Descriptive domain slices of the same test set identify uneven behavior:
 
 These are within-test subgroup summaries, not domain-held-out experiments. They motivate follow-up evaluation while reinforcing that one aggregate score does not describe every writing domain. Detailed tables, intervals, predictions and checksums are generated by `src/summarize_m4_results.py`.
 
-### 11.8 Proposed regression improvements and partner starting point
+### 11.7b M4 Random Forest result and model recommendation
 
-No further performance experiment is implemented at this handoff. The current baseline and its results remain fixed. Recommended follow-ups are:
+The random forest was tuned with the same pipeline, the same 36-configuration grid (`max_depth` × `min_samples_leaf` × `max_features`, 300 trees), the same five M4 training folds and the same selection metric (validation ROC-AUC) as the original study. The search (180 fits) took about 14 minutes with eight CPU workers. It selected fully grown trees with `min_samples_leaf = 10` and `max_features = 7` (plain bagging). The loss is unweighted and the decision threshold remains 0.5, exactly as for LR.
 
-1. **Complete the deferred RF comparison.** The owner requested stopping the running M4 RF grid search. Its parent and workers were terminated; no completed model/CV result was saved. The partner should start a fresh search on the approved features and folds, not report the canceled search as a result.
-2. **Test class weighting.** Compare unweighted LR with `class_weight="balanced"` inside training CV, evaluating balanced accuracy, Human false positives and AI recall alongside the rubric metrics. Weighting may change the operating tradeoff; it is not a guaranteed improvement in ranking or calibration.
-3. **Select a decision threshold from training predictions.** Generate out-of-fold probabilities on the training folds and choose a threshold against an owner-agreed false-positive/recall objective. A threshold changes decisions, not the ROC-AUC of fixed scores. The current test set is not the threshold selection set.
-4. **Use the existing tuning evidence before expanding the search.** Mean L1 validation ROC-AUC is approximately 0.712914 at `C=10` and 0.712918 at `C=1000`, compared with fold SD approximately 0.0036. The upper-edge optimum is a very small numerical gain on a plateau; a much wider C grid alone is unlikely to resolve the observed failure mode. This is an interpretation of the saved training CV, not a new test-tuned model choice.
-5. **Investigate representation and generalization.** Add descriptive text-length slices, consider domain/generator holdouts, and propose independently reviewed full-candidate, interaction-feature or text-vectorization comparisons. Preserve the seven-feature baseline and disclose any new feature/exclusion policy.
+| Evaluation | Accuracy | AI precision | AI recall | AI F1 | ROC-AUC |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| CV train mean | 0.9251 | 0.9265 | 0.9878 | 0.9562 | 0.9752 |
+| CV validation mean | 0.8787 | 0.8944 | 0.9676 | 0.9296 | 0.9039 |
+| Full training partition | 0.9261 | 0.9278 | 0.9875 | 0.9567 | 0.9753 |
+| M4 test | 0.8795 | 0.8961 | 0.9663 | 0.9299 | 0.9078 |
+
+| True class | Predicted Human | Predicted AI |
+| --- | ---: | ---: |
+| Human | 1,500 | 1,730 |
+| AI | 521 | 14,927 |
+
+Test balanced accuracy is 0.7153 and the Human false-positive rate is **53.56%** (LR: 0.5620 and 86.84%). Group-bootstrap 95% intervals for the RF are ROC-AUC [0.903, 0.913], balanced accuracy [0.707, 0.726] and Human false-positive rate [0.514, 0.554]. Paired with LR on identical resamples, the RF is better on every reported metric: ROC-AUC +0.198 [+0.188, +0.209], balanced accuracy +0.153 [+0.146, +0.162], Human false-positive rate −0.333 [−0.351, −0.317] and accuracy +0.036 [+0.032, +0.040]. The RF also has the lower Human false-positive rate in every domain (arXiv 77.9%, peer reviews 65.1%, Reddit 36.8%, wikiHow 36.7%, Wikipedia 51.9%).
+
+![M4 Random Forest confusion matrix and ROC](reports/m4/random_forest_evaluation.png)
+
+*Figure 14. Held-out M4 random-forest predictions at threshold 0.5 and their ROC curve.*
+
+**Over- and underfitting.** The two models fail in opposite ways. LR's training and validation scores are equal (ROC-AUC 0.713), so it is **underfitting**: a linear boundary on these seven features cannot separate M4's classes. The RF shows a moderate train/validation gap (ROC-AUC 0.975 vs. 0.904), so it partly memorizes the training data, but its validation score matches the untouched test score (0.904 vs. 0.908) with small fold variation (SD 0.0024). The gap therefore does not make its test estimate unreliable. The regularizing `min_samples_leaf = 10` beat fully grown leaves by a small margin.
+
+**What the forest uses.** Training impurity importances rank word count (0.33), Guiraud root TTR (0.20) and burstiness (0.15) highest, with reading grade lowest (0.06). This differs from the original benchmark, where reading grade and word length dominated. Impurity importances are computed on training data and favor features with many split points, so they are descriptive only.
+
+**Recommendation.** For M4, and for the project overall, we recommend the **random forest**. The evidence:
+
+- It ranks texts far better (ROC-AUC 0.908 vs. 0.710), and every paired interval excludes zero.
+- It mislabels a third fewer Human texts, which is the error that matters most for a detector.
+- Its validation estimate matches the test score, so the comparison is not an artifact of one split.
+- M4 is the more realistic test: independently collected, multi-domain, and not built from a handful of templates.
+
+On the original benchmark we preferred logistic regression, because both models were equally accurate there and LR was simpler and slightly better on unseen templates. M4 reverses that: the extra flexibility is what lets the same seven features carry real signal. The costs are a longer tuning time (about 14 minutes vs. under a minute here) and less direct interpretability.
+
+Neither model is a usable detector at the default threshold: even the RF wrongly flags 54% of Human texts. Threshold selection and class weighting (section 11.8) are the next steps for both models.
+
+### 11.8 Proposed improvements and next steps
+
+The M4 random-forest comparison, previously deferred, is now complete (section 11.7b). No other performance experiment is implemented; the current baselines and their results remain fixed. Recommended follow-ups are:
+
+1. **Test class weighting.** Compare the unweighted LR and RF with `class_weight="balanced"` inside training CV, evaluating balanced accuracy, Human false positives and AI recall alongside the rubric metrics. Weighting may change the operating tradeoff; it is not a guaranteed improvement in ranking or calibration.
+2. **Select a decision threshold from training predictions.** Generate out-of-fold probabilities on the training folds and choose a threshold against an owner-agreed false-positive/recall objective. A threshold changes decisions, not the ROC-AUC of fixed scores. The current test set is not the threshold selection set.
+3. **Use the existing tuning evidence before expanding the search.** Mean L1 validation ROC-AUC is approximately 0.712914 at `C=10` and 0.712918 at `C=1000`, compared with fold SD approximately 0.0036. The upper-edge optimum is a very small numerical gain on a plateau; a much wider C grid alone is unlikely to resolve the observed failure mode. This is an interpretation of the saved training CV, not a new test-tuned model choice.
+4. **Investigate representation and generalization.** Add descriptive text-length slices, consider domain/generator holdouts, and propose independently reviewed full-candidate, interaction-feature or text-vectorization comparisons. Preserve the seven-feature baseline and disclose any new feature/exclusion policy.
 
 These proposals were motivated after examining the present test results. Future experiments must document this chronology, tune only within training folds, and use fresh independent evaluation for strong confirmatory claims. Repeatedly choosing changes from the current test scores would undermine its held-out role. Quality-based exclusions of prompt copies/degenerate generations also require owner review and a separately reported sensitivity experiment; no such filter has been silently added.
 
-The clear continuation point is [docs/HANDOFF.md](docs/HANDOFF.md): validate the local M4 artifacts, start the fresh RF search, regenerate the comparison, and update both this report and README with measured results. Broader models and stronger generalization controls remain future work, not completed claims.
+The continuation point is [docs/HANDOFF.md](docs/HANDOFF.md). Broader models and stronger generalization controls remain future work, not completed claims.
 
 ## 12. Current definition of done
 
@@ -454,4 +490,4 @@ The preprocessing stage is complete only when:
 - the final processed CSV is written under `data/processed/`; and
 - the CSV passes schema, row-count, target, missingness, and reproducibility checks.
 
-The original preprocessing artifact and its model evaluations are complete for the approved seven-feature policy. The M4 processed CSV and provenance table have also been generated and validated. The owner-approved 0.85 grouping, final partitions, original-model transfer, retrained LR, and report comparison are complete. M4 RF retraining is explicitly deferred to the partner; regression improvement proposals and domain/generator holdouts are future work. Exploratory samples are retained separately and are not evaluation partitions.
+The original preprocessing artifact and its model evaluations are complete for the approved seven-feature policy. The M4 processed CSV and provenance table have also been generated and validated. The owner-approved 0.85 grouping, final partitions, original-model transfer, retrained LR and RF, and report comparison are complete. Class weighting, threshold selection and domain/generator holdouts are future work. Exploratory samples are retained separately and are not evaluation partitions.

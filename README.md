@@ -13,8 +13,9 @@ We compute **seven features** from the text alone (word count, average word leng
 | Original LR applied to M4, no retraining | LR | 29.08% | 0.6221 | 8.58% |
 | Original RF applied to M4, no retraining | RF | 19.42% | 0.6119 | 3.16% |
 | LR retrained on M4 (93k texts, 5 domains) | LR | 84.36% | 0.7103 | 86.84% |
+| RF retrained on M4 (93k texts, 5 domains) | **RF** | **87.95%** | **0.9078** | **53.56%** |
 
-**Takeaway.** The original benchmark is built from only 11 writing templates, so near-perfect scores there do not carry over. On M4, a larger multi-domain corpus, the same features separate the classes only weakly. Always guessing "AI" already scores 82.71% on M4, because it is 83% AI. Accuracy alone is therefore misleading, which is why the table also reports how often Human texts are wrongly called AI. M4 random-forest retraining has not been run yet.
+**Takeaway.** The original benchmark is built from only 11 writing templates, so near-perfect scores there do not carry over to M4, a larger, independently collected multi-domain corpus. Retrained on M4, logistic regression underfits (ROC-AUC 0.71), while the random forest reaches ROC-AUC 0.91 and wrongly flags a third fewer Human texts. **We recommend the random forest** ([why](final_project_report.md#117b-m4-random-forest-result-and-model-recommendation)). Always guessing "AI" already scores 82.71% on M4, because it is 83% AI. Accuracy alone is therefore misleading, which is why the table also reports how often Human texts are wrongly called AI. Even the random forest still flags about half of Human texts at the default threshold.
 
 ![Model comparison](reports/m4/study_model_comparison.png)
 
@@ -23,7 +24,7 @@ We compute **seven features** from the text alone (word count, average word leng
 You can review everything on GitHub without installing or running anything.
 
 1. **This README.** The summary and how to run the code.
-2. **[Notebooks](notebooks/).** A step-by-step walkthrough of the original benchmark, saved with outputs: [01 data](notebooks/01_problem_and_data_understanding.ipynb) · [02 preprocessing](notebooks/02_preprocessing_and_features.ipynb) · [03 logistic regression](notebooks/03_logistic_regression.ipynb) · [04 random forest](notebooks/04_random_forest.ipynb) · [05 comparison](notebooks/05_model_comparison.ipynb)
+2. **[Project notebook](project_notebook.ipynb).** One notebook covering rubric steps 1–4 for both datasets, saved with outputs: problem and data, preprocessing, both models, evaluation and comparison, then the M4 generalization test and the final recommendation.
 3. **[Full report](final_project_report.md).** Every decision, figure, and limitation, including the M4 extension (section 11).
 4. **[docs/](docs/README.md).** Detailed specs (feature formulas, data dictionary, M4 procedure), arranged by the question each one answers.
 
@@ -52,9 +53,9 @@ Every task goes through one script:
 | Command | What it does | Time |
 | --- | --- | --- |
 | `python run.py status` | Shows what is already built and what to run next | instant |
-| `python run.py original` | Downloads the 50k benchmark, builds features and the split, trains LR and RF, compares them | ~10–15 min |
+| `python run.py original` | Downloads the 50k benchmark, builds features and the split, trains LR and RF, compares them | ~5–15 min |
 | `python run.py predict "your text"` | Classifies a text snippet (needs `original` first) | instant |
-| `python run.py m4` | Runs the full M4 extension: download, features, grouping, split, LR, transfer test, summary | ~1 h the first time |
+| `python run.py m4` | Runs the full M4 extension: download, features, grouping, split, LR, transfer test, RF, summary | ~20 min–1 h |
 | `python run.py figures` | Regenerates the exploratory figures | ~5 min |
 | `python run.py test` | Runs the unit tests | seconds |
 
@@ -71,15 +72,15 @@ Prints `Human` or `AI`, the probability of AI, and the seven feature values used
 ### Troubleshooting
 
 - **Kaggle asks you to sign in.** Run `python -c "import kagglehub; kagglehub.login()"`, or follow the [KaggleHub auth guide](https://github.com/Kaggle/kagglehub#authenticate). For M4, you can also download version 1 of the [dataset](https://www.kaggle.com/datasets/serjhenrique/m4-multi-generator-domain) in a browser and run `python src/download_m4.py --archive path/to/m4.zip`.
-- **Re-running the notebooks.** After `python run.py original`, run `jupyter nbconvert --to notebook --execute --inplace notebooks/*.ipynb`.
+- **Re-running the notebook.** After `python run.py original`, run `jupyter nbconvert --to notebook --execute --inplace project_notebook.ipynb`. Part 5 reads the committed M4 results, so it doesn't need `run.py m4`.
 - **Exact environment.** `requirements-m4-lock.txt` pins the exact package versions used for the M4 run (Windows, Python 3.12).
 
 ## Project layout
 
 ```text
 run.py                  one entry point for every task (see table above)
+project_notebook.ipynb  rendered walkthrough of rubric steps 1–4, both datasets
 final_project_report.md full write-up
-notebooks/              rendered walkthroughs (original benchmark)
 src/                    pipeline scripts; run.py calls them in order
   text_features.py        the seven feature formulas
   build_splits.py         near-duplicate grouping + group-aware split
@@ -102,4 +103,4 @@ data/, models/          created locally by run.py (not in Git)
 
 ## Limitations
 
-Results describe these two datasets under this feature policy. They are not a claim of universal AI-text detection. The M4 LR uses the default 0.5 threshold and is unweighted, so it labels most Human texts as AI. Class weighting, threshold selection, and the M4 random forest are proposed next steps ([handoff](docs/HANDOFF.md)), not completed results.
+Results describe these two datasets under this feature policy. They are not a claim of universal AI-text detection. Both M4 models use the default 0.5 threshold and no class weighting, so they over-predict AI: 87% (LR) and 54% (RF) of Human texts are wrongly flagged. Class weighting and threshold selection are proposed next steps ([handoff](docs/HANDOFF.md)), not completed results. M4's generators are also older (for example GPT-3.5 and davinci-003).
