@@ -1,13 +1,8 @@
 # Human vs. AI Text Classification
 
-CSCE 478/878 project. Can simple, explainable measurements of a text snippet
-tell whether a human or an AI wrote it?
+CSCE 478/878 project. Can simple, explainable measurements of a text snippet tell whether a human or an AI wrote it?
 
-We compute **seven features** from the text alone (word count, average word
-length, average sentence length, Guiraud lexical diversity, punctuation density,
-Flesch-Kincaid grade, and burstiness), then train logistic regression (LR) and
-random forest (RF) classifiers. No metadata, detector scores, or labels are ever
-used as inputs.
+We compute **seven features** from the text alone (word count, average word length, average sentence length, Guiraud lexical diversity, punctuation density, Flesch-Kincaid grade, and burstiness), then train logistic regression (LR) and random forest (RF) classifiers. No metadata, detector scores, or labels are ever used as inputs.
 
 ## Results at a glance
 
@@ -19,12 +14,7 @@ used as inputs.
 | Original RF applied to M4, no retraining | RF | 19.42% | 0.6119 | 3.16% |
 | LR retrained on M4 (93k texts, 5 domains) | LR | 84.36% | 0.7103 | 86.84% |
 
-**Takeaway.** The original benchmark is built from only 11 writing templates, so
-near-perfect scores there do not carry over. On M4, a larger multi-domain corpus,
-the same features separate the classes only weakly. Always guessing "AI" already
-scores 82.71% on M4, because it is 83% AI. Accuracy alone is therefore
-misleading, which is why the table also reports how often Human texts are
-wrongly called AI. M4 random-forest retraining has not been run yet.
+**Takeaway.** The original benchmark is built from only 11 writing templates, so near-perfect scores there do not carry over. On M4, a larger multi-domain corpus, the same features separate the classes only weakly. Always guessing "AI" already scores 82.71% on M4, because it is 83% AI. Accuracy alone is therefore misleading, which is why the table also reports how often Human texts are wrongly called AI. M4 random-forest retraining has not been run yet.
 
 ![Model comparison](reports/m4/study_model_comparison.png)
 
@@ -33,12 +23,7 @@ wrongly called AI. M4 random-forest retraining has not been run yet.
 You can review everything on GitHub without installing or running anything.
 
 1. **This README.** The summary and how to run the code.
-2. **[Notebooks](notebooks/).** A step-by-step walkthrough of the original benchmark, saved with outputs:
-   [01 data](notebooks/01_problem_and_data_understanding.ipynb) ·
-   [02 preprocessing](notebooks/02_preprocessing_and_features.ipynb) ·
-   [03 logistic regression](notebooks/03_logistic_regression.ipynb) ·
-   [04 random forest](notebooks/04_random_forest.ipynb) ·
-   [05 comparison](notebooks/05_model_comparison.ipynb)
+2. **[Notebooks](notebooks/).** A step-by-step walkthrough of the original benchmark, saved with outputs: [01 data](notebooks/01_problem_and_data_understanding.ipynb) · [02 preprocessing](notebooks/02_preprocessing_and_features.ipynb) · [03 logistic regression](notebooks/03_logistic_regression.ipynb) · [04 random forest](notebooks/04_random_forest.ipynb) · [05 comparison](notebooks/05_model_comparison.ipynb)
 3. **[Full report](final_project_report.md).** Every decision, figure, and limitation, including the M4 extension (section 11).
 4. **[docs/](docs/README.md).** Detailed specs (feature formulas, data dictionary, M4 procedure), arranged by the question each one answers.
 
@@ -73,9 +58,7 @@ Every task goes through one script:
 | `python run.py figures` | Regenerates the exploratory figures | ~5 min |
 | `python run.py test` | Runs the unit tests | seconds |
 
-Steps whose output already exists are skipped, so a re-run after an
-interruption continues where it stopped. Add `--dry-run` to see the plan
-without running it, or `--force` to rebuild everything.
+Steps whose output already exists are skipped, so a re-run after an interruption continues where it stopped. Add `--dry-run` to see the plan without running it, or `--force` to rebuild everything.
 
 ### 3. Classify your own text
 
@@ -83,10 +66,7 @@ without running it, or `--force` to rebuild everything.
 python run.py predict "The mitochondria is the powerhouse of the cell, and it plays a key role in energy production."
 ```
 
-Prints `Human` or `AI`, the probability of AI, and the seven feature values
-used. Other options: `--model random_forest`, `--file passage.txt`, or pipe text
-in on standard input. The model reflects this benchmark's idea of Human vs. AI
-writing and is **not** a general-purpose AI detector (see the results above).
+Prints `Human` or `AI`, the probability of AI, and the seven feature values used. Other options: `--model random_forest`, `--file passage.txt`, or pipe text in on standard input. The model reflects this benchmark's idea of Human vs. AI writing and is **not** a general-purpose AI detector (see the results above).
 
 ### Troubleshooting
 
@@ -122,8 +102,4 @@ data/, models/          created locally by run.py (not in Git)
 
 ## Limitations
 
-Results describe these two datasets under this feature policy. They are not a
-claim of universal AI-text detection. The M4 LR uses the default 0.5 threshold
-and is unweighted, so it labels most Human texts as AI. Class weighting,
-threshold selection, and the M4 random forest are proposed next steps
-([handoff](docs/HANDOFF.md)), not completed results.
+Results describe these two datasets under this feature policy. They are not a claim of universal AI-text detection. The M4 LR uses the default 0.5 threshold and is unweighted, so it labels most Human texts as AI. Class weighting, threshold selection, and the M4 random forest are proposed next steps ([handoff](docs/HANDOFF.md)), not completed results.
