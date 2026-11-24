@@ -6,6 +6,28 @@
 **Task:** Binary classification of human-written versus AI-generated text  
 **Status:** Original study, M4 preprocessing/splits, transfer evaluation and M4 LR complete; M4 RF deferred to partner
 
+**Contents:**
+Part A, original benchmark —
+[1 Problem](#1-problem-definition) ·
+[2 Data](#2-dataset-and-data-understanding) ·
+[3 Feature policy](#3-approved-feature-policy) ·
+[4 Formal tone](#4-formal-tone-exclusion) ·
+[5 Features](#5-text-derived-feature-definitions) ·
+[6 Redundancy](#6-redundancy-analysis) ·
+[7 Near-duplicates](#7-duplicate-and-near-duplicate-controls) ·
+[7a LR](#7a-first-model-result-logistic-regression) ·
+[7b RF](#7b-second-model-random-forest-and-comparison) ·
+[8 Plan](#8-leakage-aware-preprocessing-plan) ·
+[9 Models](#9-model-development-handoff) ·
+[10 Limitations](#10-original-benchmark-limitations-and-reason-for-a-second-dataset)
+<br>
+Part B, M4 extension —
+[11 M4](#11-second-dataset-m4) ·
+[11.6 Transfer](#116-evaluation-design-and-transfer-results) ·
+[11.7 M4 LR](#117-m4-logistic-regression-result-and-interpretation) ·
+[11.8 Next steps](#118-proposed-regression-improvements-and-partner-starting-point) ·
+[12 Done criteria](#12-current-definition-of-done)
+
 ## 1. Problem definition
 
 The project investigates whether a text sample can be classified as Human or AI
@@ -135,10 +157,10 @@ and other engineered scores. Their original generator formulas are not fully
 documented in the source material. They therefore cannot be called exactly
 reproducible model inputs until the project implements and versions their
 algorithms. The complete specification and this limitation are recorded in
-[`rubric_explanation/feature_derivation_spec.md`](rubric_explanation/feature_derivation_spec.md).
+[`docs/feature_derivation_spec.md`](docs/feature_derivation_spec.md).
 
 The first equation-by-equation comparison against the local columns is recorded
-in [`rubric_explanation/feature_formula_verification.md`](rubric_explanation/feature_formula_verification.md).
+in [`docs/feature_formula_verification.md`](docs/feature_formula_verification.md).
 It shows that the stored lexical-diversity column matches ordinary type-token
 ratio rather than Guiraud's index, while the proposed Flesch-Kincaid equation
 is standard but not exactly reproducible from the stored intermediate values.
@@ -225,9 +247,9 @@ highly redundant raw counts, the constant special-character count, ordinary
 type-token ratio, and average syllables per word.
 
 The detailed preprocessing rationale is maintained in
-[`rubric_explanation/data_preprocessing_and_exploration.md`](rubric_explanation/data_preprocessing_and_exploration.md),
+[`docs/data_preprocessing_and_exploration.md`](docs/data_preprocessing_and_exploration.md),
 and the exact independently derived feature rules are maintained in
-[`rubric_explanation/feature_derivation_spec.md`](rubric_explanation/feature_derivation_spec.md).
+[`docs/feature_derivation_spec.md`](docs/feature_derivation_spec.md).
 
 ## 7. Duplicate and near-duplicate controls
 
@@ -255,7 +277,7 @@ resulting 47,779 groups drive a stratified, group-aware 40,000/10,000
 train/test split and five CV folds (exactly 50% AI in every partition). Whole
 template families are additionally held out as a generalization stress test.
 Full details are in
-[`rubric_explanation/data_preprocessing_and_exploration.md`](rubric_explanation/data_preprocessing_and_exploration.md).
+[`docs/data_preprocessing_and_exploration.md`](docs/data_preprocessing_and_exploration.md).
 
 ![Near-duplicate similarity diagnostics](reports/figures/near_duplicate_similarity_diagnostics.png)
 
@@ -273,7 +295,7 @@ Flesch-Kincaid grade, and punctuation density carry almost all of the signal.
 The benchmark's own detector score reaches only 0.448 ROC-AUC on the same test
 rows. Because of the template structure, these numbers describe this benchmark,
 not real-world AI detection. Full results:
-[`rubric_explanation/model_eval_and_comparison.md`](rubric_explanation/model_eval_and_comparison.md).
+[`docs/model_eval_and_comparison.md`](docs/model_eval_and_comparison.md).
 
 ## 7b. Second model: random forest, and comparison
 
@@ -292,22 +314,16 @@ interpretable. Walkthrough: `notebooks/05_model_comparison.ipynb`.
 
 ## 8. Leakage-aware preprocessing plan
 
-Next Step:
-
-1. ~~Audit near-duplicate and template similarity before splitting.~~ Done.
-2. ~~Create a reproducible stratified train/test split, or a group-aware split if
-   similarity groups require it.~~ Done (group-aware).
-3. Fit imputers, encoders, scalers, and feature-selection procedures using only
-   the training partition.
-4. Apply the fitted transformations unchanged to validation and test data.
-5. Train four or five different models under the same feature matrix and split
-   policy. (Logistic regression and random forest done; linear SVM, gradient
-   boosting, and KNN pending.)
-6. Evaluate accuracy, precision, recall, F1, ROC-AUC, confusion matrices, and
-   train/test differences as appropriate for the project.
-7. Use the benchmark detector score only as an evaluation reference.
-8. Write and validate the final processed CSV with its schema, row count,
-   target values, missingness policy, and transformation configuration.
+| Step | Status |
+| --- | --- |
+| 1. Audit near-duplicate and template similarity before splitting | Done |
+| 2. Create a reproducible stratified, group-aware train/test split | Done |
+| 3. Fit scalers and other learned steps on the training partition only | Done (inside each CV pipeline) |
+| 4. Apply fitted transformations unchanged to validation and test data | Done |
+| 5. Train several models on the same feature matrix and split | Logistic regression and random forest done; linear SVM, gradient boosting and KNN not run |
+| 6. Evaluate accuracy, precision, recall, F1, ROC-AUC, confusion matrices and train/validation gaps | Done |
+| 7. Use the benchmark detector score only as an evaluation reference | Done |
+| 8. Write and validate the processed CSV (schema, row count, target, missingness) | Done |
 
 ## 9. Model-development handoff
 
@@ -325,7 +341,7 @@ matrix will be compared with the full independently derived candidate matrix.
 If performance is similar, the reduced matrix will be preferred for
 interpretability. The complete model rationale, tuning parameters, and
 comparison rules are documented in
-[`rubric_explanation/model_development.md`](rubric_explanation/model_development.md).
+[`docs/model_development.md`](docs/model_development.md).
 
 ## 10. Original-benchmark limitations and reason for a second dataset
 
@@ -377,7 +393,7 @@ store prompt-bearing content in `machine_text`, with the actual response in
 another field; peer-review records contain lists of separate reviews. Explicit
 field adapters and their original field names are retained for traceability.
 The full data dictionary and adapter table are in
-[`rubric_explanation/m4_dataset_review.md`](rubric_explanation/m4_dataset_review.md).
+[`docs/m4_dataset_review.md`](docs/m4_dataset_review.md).
 
 ### 11.2 Owner-reviewed decisions
 
@@ -715,7 +731,7 @@ establish a general-purpose detector.
 
 Separate M4 paths preserve the original results. Scripts, approval history,
 candidate risks, report artifacts and the partner's next actions are maintained
-in [`rubric_explanation/m4_dataset_review.md`](rubric_explanation/m4_dataset_review.md).
+in [`docs/m4_dataset_review.md`](docs/m4_dataset_review.md).
 
 ### 11.7 M4 Logistic Regression result and interpretation
 
@@ -823,7 +839,7 @@ Quality-based exclusions of prompt copies/degenerate generations also require
 owner review and a separately reported sensitivity experiment; no such filter
 has been silently added.
 
-The clear continuation point is [HANDOFF.md](HANDOFF.md): validate the local M4
+The clear continuation point is [docs/HANDOFF.md](docs/HANDOFF.md): validate the local M4
 artifacts, start the fresh RF search, regenerate the comparison, and update
 both this report and README with measured results. Broader models and stronger
 generalization controls remain future work, not completed claims.
