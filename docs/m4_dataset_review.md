@@ -270,7 +270,7 @@ environment snapshot and reproduction instructions support a new checkout.
 
 ## Partner next steps
 
-1. Start with [HANDOFF.md](../HANDOFF.md). Validate the existing local artifacts,
+1. Start with [HANDOFF.md](HANDOFF.md). Validate the existing local artifacts,
    or reproduce data on a fresh checkout using README and the environment lock.
 2. Start a fresh RF search on the approved feature matrix and stored folds:
    `python src/train_m4.py --model random_forest --jobs 4`.

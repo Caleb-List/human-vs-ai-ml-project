@@ -28,6 +28,8 @@
 
 ### Changed
 
+- Prepare the repository for peer review. Add `run.py`, one entry point for every task (`status`, `original`, `m4`, `figures`, `predict`, `test`) that skips steps that are already built. Shorten the README to a summary, results, reading guide and quickstart; the full study narrative stays in `final_project_report.md`. Move `rubric_explanation/*`, `observations/formal_tone_score.md`, `HANDOFF.md`, `CHANGELOG.md` and `project_rubric.pdf` into `docs/` with an index, and update all links. Add a table of contents to the report and turn the section 8 to-do list into a status table. No code, data, feature, split or result changes.
+
 - Move CV summaries, the template-family hold-out, and the detector reference into `src/modeling.py` so all models share them (logistic-regression results unchanged).
 - Clarify that the formal-tone pattern is unexplained and could be leakage, a dataset artifact, or a legitimate signal; avoid treating the cause as established.
 - Expand the README with the visualization outputs and the caveat around interpreting the dataset's precomputed tone score.

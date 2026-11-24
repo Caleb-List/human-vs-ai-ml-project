@@ -61,7 +61,7 @@ The following existing figures provide the first visual review:
 - [Candidate text-feature distributions](../reports/figures/candidate_text_feature_distributions.png)
 
 The formal-tone figures should be read together with
-[`observations/formal_tone_score.md`](../observations/formal_tone_score.md).
+[`docs/formal_tone_score.md`](formal_tone_score.md).
 They show a reproducible pattern, but the pattern's provenance is unknown; a
 strong visual separation is not sufficient evidence that the field is a valid
 predictor.

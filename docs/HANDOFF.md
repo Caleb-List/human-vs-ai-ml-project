@@ -9,9 +9,9 @@ stopped at the owner's request and is your next model experiment.** Its partial
 search was not saved; start a fresh search. Do not treat the original RF transfer
 result as a retrained M4 RF result.
 
-Read the [README study narrative](README.md) first for context, then the
-[final report](final_project_report.md) for detailed decisions and figures.
-[M4 procedure and data dictionary](rubric_explanation/m4_dataset_review.md)
+Read the [README](../README.md) first for a summary, then the
+[final report](../final_project_report.md) for detailed decisions and figures.
+[M4 procedure and data dictionary](m4_dataset_review.md)
 contains implementation details. Both main documents should be updated when new
 results are added.
 
@@ -46,7 +46,7 @@ comparison. Preserve all original and transfer results.
 
 `data/` and `models/` are ignored by Git. Code and reports alone do not contain
 the processed CSVs, trained models, per-row M4 predictions, or similarity cache.
-Follow the README's M4 reproduction commands, using Python 3.12 and
+Run `python run.py m4` (see the README), using Python 3.12 and
 `requirements-m4-lock.txt`. Download/rebuild original benchmark features too if
 reconstructing original models for transfer. The Kaggle M4 download is pinned
 to version 1 and worked without credentials in this checkout.

@@ -5,7 +5,7 @@
 This repository supports a CSCE 478/878 machine-learning project that classifies
 short texts as human-written or AI-generated. The project uses the Kaggle
 dataset `datascikhan/ai-vs-human-text-classification-benchmark-50k` and is
-organized around the rubric sections in `rubric_explanation/`.
+organized around the rubric sections in `docs/`.
 
 The current workstream is data understanding and preprocessing. The definition
 of done for the preprocessing work is a reproducible, documented processed CSV
@@ -110,13 +110,13 @@ Gradient Boosting, and K-Nearest Neighbors. All models must use the same
 group-aware folds, leakage-safe preprocessing, and rubric metrics: accuracy,
 precision, recall, F1-score, ROC-AUC, confusion matrices, and train/validation
 comparisons. The full model rationale is in
-`rubric_explanation/model_development.md`.
+`docs/model_development.md`.
 
 ## Original-workstream checkpoint
 
 The original near-duplicate grouping, group-aware splits and LR/RF baseline
 evaluations are recorded in the reports. The active M4 continuation is described
-below and in HANDOFF.md; do not repeat the original work as a new next step.
+below and in docs/HANDOFF.md; do not repeat the original work as a new next step.
 
 ## Owner-approved M4 second-dataset policy (`better-data`)
 
