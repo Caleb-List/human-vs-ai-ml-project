@@ -1,8 +1,6 @@
 # Supporting documents
 
-The [main README](../README.md) and the [full report](../final_project_report.md)
-are enough for most readers. Use these files when you want the detail behind a
-specific decision.
+The [main README](../README.md) and the [full report](../final_project_report.md) are enough for most readers. Use these files when you want the detail behind a specific decision.
 
 | Question | Document |
 | --- | --- |
