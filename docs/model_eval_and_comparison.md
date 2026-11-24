@@ -164,7 +164,7 @@ Errors are not random. They are concentrated in two templates:
 
 Family 10 has the highest reading grade of the human templates (median 12.2), and family 0 has the lowest of the AI templates (median 15.2). Both models fail where the two classes' styles overlap on the strongest feature. The same pair drives the worst template-family hold-out fold for both models (LR 0.965, RF 0.960 accuracy).
 
-### Recommendation for the original benchmark (draft for team review)
+### Recommendation for the original benchmark
 
 **Logistic regression.**
 
@@ -195,6 +195,6 @@ Because M4 is imbalanced, accuracy alone is misleading (always guessing AI score
 
 We recommend the **random forest**. On the original benchmark the two models tied and LR was preferred for simplicity. M4, the more realistic test, shows that the forest's flexibility is what lets the same seven features carry real signal. Neither model is a usable detector at the 0.5 threshold, since even the forest wrongly flags 54% of Human texts. Threshold selection and class weighting are the next steps.
 
-## Models 3–5
+## Models 3–5 (not run)
 
-Pending (Linear SVM, Gradient Boosting, K-Nearest Neighbors). Each should reuse `src/modeling.py` (`load_model_data`, `predefined_cv`, `template_family_holdout`, `classification_metrics`, `save_test_predictions`), be added to `MODELS` in `src/compare_models.py`, and get its own notebook.
+Linear SVM, gradient boosting and K-nearest neighbors were planned but not run; they are future work. Each would reuse `src/modeling.py` (`load_model_data`, `predefined_cv`, `template_family_holdout`, `classification_metrics`, `save_test_predictions`), be added to `MODELS` in `src/compare_models.py`, and get its own notebook.

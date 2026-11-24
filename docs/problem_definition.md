@@ -41,4 +41,4 @@ The task has labeled examples and a categorical outcome, making supervised class
 
 ## Scope boundary for this checkpoint
 
-This document defines the task and records risks. It does not finalize column removal or preprocessing rules. Those decisions will be made after review of the exploratory figures and the proposed feature-policy table, then recorded with an approval note in the preprocessing document.
+This document defines the task and records risks. The column-removal and preprocessing decisions were made afterwards, following review of the exploratory figures and the feature-policy table. They are recorded in `data_preprocessing_and_exploration.md` and the final report.

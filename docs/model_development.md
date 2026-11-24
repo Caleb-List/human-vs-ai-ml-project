@@ -1,8 +1,10 @@
 # Model Development Plan
 
+Logistic regression and random forest were implemented and evaluated on both datasets. Models 2, 4 and 5 below, and the full-candidate feature ablation, were planned but not run; they are kept here as future work.
+
 ## Shared experimental design
 
-The models will use the same reduced text-derived feature matrix, the same group-aware splits, the same preprocessing conventions, and the same random seeds. A second ablation will compare the reduced matrix with the full independently derived candidate matrix. The benchmark detector score and all dataset-construction metadata remain excluded from model inputs.
+The models use the same reduced text-derived feature matrix, the same group-aware splits, the same preprocessing conventions, and the same random seeds. A planned second ablation (not run) would compare the reduced matrix with the full independently derived candidate matrix. The benchmark detector score and all dataset-construction metadata remain excluded from model inputs.
 
 Near-duplicate texts will be assigned to groups before cross-validation. A stratified group-aware procedure will preserve Human/AI proportions as closely as possible in each fold. Any scaler, imputer, or feature-selection operation will be fit inside the training fold only.
 
@@ -29,7 +31,7 @@ Status: trained and evaluated (`src/train_logistic_regression.py`). Results are 
 
 **Selected:** `C = 0.1`, L1 penalty. Validation ROC-AUC reaches its plateau (about 0.9998) from `C = 0.01` upward for both penalties, and train and validation curves overlap at every `C` (`reports/figures/logistic_regression_tuning_curve.png`). The L1 penalty set the `Text_Guiraud_Root_TTR` coefficient to exactly zero, so lexical diversity adds nothing once the other six features are known.
 
-### 2. Linear support-vector machine
+### 2. Linear support-vector machine — not run
 
 This is a second linear margin-based model with a different optimization objective from logistic regression. It is appropriate for a small, continuous feature matrix and can be compared fairly under the same scaling and grouped folds. The main tuning parameter is `C`.
 
@@ -55,11 +57,11 @@ Status: trained and evaluated (`src/train_random_forest.py`, `project_notebook.i
 
 **Selected:** `max_depth = None`, `min_samples_leaf = 1`, `max_features = 2`. Depth 16 and unlimited depth score identically. `max_features = 2` beats 4 and 7 at every depth and leaf size, so decorrelating the trees helps, though only by small margins because ROC-AUC is near its ceiling (0.9998–1.0000) for most configurations. Shallow trees (`max_depth = 4`) and large leaves (`min_samples_leaf = 50`) are mildly underfit (`reports/figures/random_forest_tuning_curve.png`).
 
-### 4. Gradient boosting
+### 4. Gradient boosting — not run
 
 This nonlinear additive ensemble can capture structured interactions. Important parameters include number of estimators, learning rate, maximum depth, and subsampling. It will be tuned using only training folds.
 
-### 5. K-nearest neighbors
+### 5. K-nearest neighbors — not run
 
 This distance-based model tests whether nearby text-statistic profiles have similar labels. It requires scaling and is likely to be sensitive to redundant features, making it a useful diagnostic for the reduction decision. Important parameters include neighbor count, distance metric, and weighting.
 

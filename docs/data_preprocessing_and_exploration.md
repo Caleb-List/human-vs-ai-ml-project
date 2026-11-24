@@ -2,7 +2,7 @@
 
 ## Status and decision gate
 
-This is the redundancy and duplicate-review checkpoint. The figures and observations below support a ping-pong review with the project owner. The owner has approved a text-only input boundary: raw text is retained for traceability, the benchmark detector score is evaluation-only, construction metadata is not an input, and the unexplained/prompt-sensitive formal-tone score is excluded from the initial input policy. The final subset of text-derived features and the final processed CSV remain pending this checkpoint.
+**Status: complete.** This document began as the redundancy and duplicate-review checkpoint and is kept as the record of that review. The owner approved the reduced seven-feature policy, and the processed CSV and group-aware split are generated and validated (see the final report, sections 6–7). The owner has approved a text-only input boundary: raw text is retained for traceability, the benchmark detector score is evaluation-only, construction metadata is not an input, and the unexplained/prompt-sensitive formal-tone score is excluded from the initial input policy.
 
 Because the public dataset sources do not disclose the original feature generator, the project has chosen to independently derive a candidate feature set from `Raw_Text` using the exact rules in `feature_derivation_spec.md` and the implementation in `src/text_features.py`. The source columns are retained for comparison only; they are not treated as authoritative inputs.
 
@@ -70,8 +70,8 @@ The reduced artifact is generated and validated by `src/prepare_final_data.py`.
 | `Label` | Binary target | Keep as target only; never use as an input | Approved |
 | `Text_ID` | Unique identifier | Retain only for traceability; exclude from model matrix | Approved |
 | `Raw_Text` | Input text and traceability object | Retain in processed CSV; derive model inputs from it; do not use the raw string as a tabular numeric input | Approved |
-| Text-length/lexical/readability features | Numeric measurements of text | Review correlation matrix and combine/remove redundant features only with documented reasoning | Pending redundancy review |
-| Tone/style features | Some are prompt-sensitive or provenance-unclear | Exclude `Formal_Tone_Score` initially; review remaining text-derived measures against the feature specification | Partially approved |
+| Text-length/lexical/readability features | Numeric measurements of text | Review correlation matrix and combine/remove redundant features only with documented reasoning | Approved: reduced seven-feature policy |
+| Tone/style features | Some are prompt-sensitive or provenance-unclear | Exclude `Formal_Tone_Score` initially; review remaining text-derived measures against the feature specification | Approved: `Formal_Tone_Score` excluded; no tone feature used |
 | Source and generation metadata | Strong construction/source associations | Exclude from model input | Approved |
 | `Model_Temperature` | Missingness is perfectly class-associated | Exclude from model input | Approved |
 | `Detection_Score_Benchmark_Model_A` | Existing detector output | Use only as a held-out evaluation reference, never as an input | Approved |

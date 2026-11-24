@@ -30,6 +30,7 @@
 
 ### Changed
 
+- Final peer-review pass: remove leftover "draft"/"pending" status wording from the report, notebook and docs. Linear SVM, gradient boosting, KNN and the full-candidate feature ablation are now marked "not run (future work)" instead of planned or pending. No code, data or result changes.
 - `download_m4.py` falls back to KaggleHub when Kaggle's direct download returns 404 for anonymous requests; all 28 files match the recorded version 1 checksums. `data_loader.py` no longer fails when `data/raw/` already has files. `run.py m4` now includes the M4 random forest. Scripts print output paths relative to the project.
 - Prepare the repository for peer review. Add `run.py`, one entry point for every task (`status`, `original`, `m4`, `figures`, `predict`, `test`) that skips steps that are already built. Shorten the README to a summary, results, reading guide and quickstart; the full study narrative stays in `final_project_report.md`. Move `rubric_explanation/*`, `observations/formal_tone_score.md`, `HANDOFF.md`, `CHANGELOG.md` and `project_rubric.pdf` into `docs/` with an index, and update all links. Add a table of contents to the report and turn the section 8 to-do list into a status table. No code, data, feature, split or result changes.
 

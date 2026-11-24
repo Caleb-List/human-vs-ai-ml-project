@@ -6,7 +6,7 @@
 **Task:** Binary classification of human-written versus AI-generated text  
 **Status:** Original study and M4 extension complete: preprocessing, splits, transfer evaluation, and LR and RF retrained on M4. Recommended model: random forest (section 11.7b)
 
-**Contents:** Part A, original benchmark — [1 Problem](#1-problem-definition) · [2 Data](#2-dataset-and-data-understanding) · [3 Feature policy](#3-approved-feature-policy) · [4 Formal tone](#4-formal-tone-exclusion) · [5 Features](#5-text-derived-feature-definitions) · [6 Redundancy](#6-redundancy-analysis) · [7 Near-duplicates](#7-duplicate-and-near-duplicate-controls) · [7a LR](#7a-first-model-result-logistic-regression) · [7b RF](#7b-second-model-random-forest-and-comparison) · [8 Plan](#8-leakage-aware-preprocessing-plan) · [9 Models](#9-model-development-handoff) · [10 Limitations](#10-original-benchmark-limitations-and-reason-for-a-second-dataset) <br> Part B, M4 extension — [11 M4](#11-second-dataset-m4) · [11.6 Transfer](#116-evaluation-design-and-transfer-results) · [11.7 M4 LR](#117-m4-logistic-regression-result-and-interpretation) · [11.7b M4 RF and recommendation](#117b-m4-random-forest-result-and-model-recommendation) · [11.8 Next steps](#118-proposed-improvements-and-next-steps) · [12 Done criteria](#12-current-definition-of-done)
+**Contents:** Part A, original benchmark — [1 Problem](#1-problem-definition) · [2 Data](#2-dataset-and-data-understanding) · [3 Feature policy](#3-approved-feature-policy) · [4 Formal tone](#4-formal-tone-exclusion) · [5 Features](#5-text-derived-feature-definitions) · [6 Redundancy](#6-redundancy-analysis) · [7 Near-duplicates](#7-duplicate-and-near-duplicate-controls) · [7a LR](#7a-first-model-result-logistic-regression) · [7b RF](#7b-second-model-random-forest-and-comparison) · [8 Plan](#8-leakage-aware-preprocessing-plan) · [9 Models](#9-model-development-plan-and-what-was-run) · [10 Limitations](#10-original-benchmark-limitations-and-reason-for-a-second-dataset) <br> Part B, M4 extension — [11 M4](#11-second-dataset-m4) · [11.6 Transfer](#116-evaluation-design-and-transfer-results) · [11.7 M4 LR](#117-m4-logistic-regression-result-and-interpretation) · [11.7b M4 RF and recommendation](#117b-m4-random-forest-result-and-model-recommendation) · [11.8 Next steps](#118-proposed-improvements-and-next-steps) · [12 Done criteria](#12-current-definition-of-done)
 
 ## 1. Problem definition
 
@@ -165,7 +165,7 @@ A standardized, L1-regularized logistic regression (`C = 0.1`, chosen by group-a
 
 ## 7b. Second model: random forest, and comparison
 
-A 300-tree random forest (fully grown trees, `max_features = 2`, chosen by the same group-aware CV over 36 configurations) reaches 0.9952 test accuracy and 0.9999 ROC-AUC. It fits the training data perfectly (validation 0.9975), and on unseen templates it is slightly worse than logistic regression (0.9859 vs. 0.9888). It makes 48 test errors versus 56 for logistic regression, but an exact McNemar test finds the difference not significant (p = 0.27). Both models make almost all of their errors in two templates: the most formal human template and the least formal AI template. Permutation importance ranks the same three features highest as the logistic-regression coefficients. The draft recommendation is logistic regression: the same accuracy within noise, better generalization to unseen templates, no overfitting gap, and directly interpretable. Walkthrough: `project_notebook.ipynb` (Part 4).
+A 300-tree random forest (fully grown trees, `max_features = 2`, chosen by the same group-aware CV over 36 configurations) reaches 0.9952 test accuracy and 0.9999 ROC-AUC. It fits the training data perfectly (validation 0.9975), and on unseen templates it is slightly worse than logistic regression (0.9859 vs. 0.9888). It makes 48 test errors versus 56 for logistic regression, but an exact McNemar test finds the difference not significant (p = 0.27). Both models make almost all of their errors in two templates: the most formal human template and the least formal AI template. Permutation importance ranks the same three features highest as the logistic-regression coefficients. For the original benchmark alone we recommend logistic regression: the same accuracy within noise, better generalization to unseen templates, no overfitting gap, and directly interpretable. The overall recommendation, which includes the M4 results, is the random forest (section 11.7b). Walkthrough: `project_notebook.ipynb` (Part 4).
 
 ## 8. Leakage-aware preprocessing plan
 
@@ -180,9 +180,9 @@ A 300-tree random forest (fully grown trees, `max_features = 2`, chosen by the s
 | 7. Use the benchmark detector score only as an evaluation reference | Done |
 | 8. Write and validate the processed CSV (schema, row count, target, missingness) | Done |
 
-## 9. Model-development handoff
+## 9. Model-development plan and what was run
 
-The planned model comparison contains five candidates:
+The original plan listed five candidates. Logistic regression and random forest were implemented, tuned and evaluated on both datasets. The linear SVM, gradient boosting and KNN were not run and remain future work:
 
 1. Logistic regression — interpretable regularized linear baseline.
 2. Linear support-vector machine — alternative margin-based linear model.
@@ -190,7 +190,7 @@ The planned model comparison contains five candidates:
 4. Gradient boosting — nonlinear additive ensemble for structured interactions.
 5. K-nearest neighbors — scaled distance-based diagnostic for feature geometry.
 
-All models will use the same grouped cross-validation folds, preprocessing rules, feature policies, and evaluation metrics. The reduced seven-feature matrix will be compared with the full independently derived candidate matrix. If performance is similar, the reduced matrix will be preferred for interpretability. The complete model rationale, tuning parameters, and comparison rules are documented in [`docs/model_development.md`](docs/model_development.md).
+Both implemented models use the same grouped cross-validation folds, preprocessing rules, seven-feature policy and evaluation metrics. The planned comparison of the reduced seven-feature matrix against the full independently derived candidate matrix was not run either; it is listed with the other future work in section 11.8. The complete model rationale, tuning parameters, and comparison rules are documented in [`docs/model_development.md`](docs/model_development.md).
 
 ## 10. Original-benchmark limitations and reason for a second dataset
 
