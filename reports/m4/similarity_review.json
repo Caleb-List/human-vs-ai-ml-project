@@ -22,8 +22,8 @@
   "thresholds": [
     {
       "threshold": 0.7,
-      "near_duplicate_edges": 1266,
-      "combined_groups": 13710,
+      "near_duplicate_edges": 1267,
+      "combined_groups": 13709,
       "largest_group": 609,
       "rows_in_multitext_groups": 93434
     },
@@ -75,6 +75,6 @@
     "m4_normalized_exact_overlap_rows": 0,
     "scope": "Normalized exact overlap only; no claim of semantic independence"
   },
-  "canonical_texts_sha256": "c5de18cfe41b789c1d9b68548c5e28074d192717f0df03bafd759278bd601e37",
+  "canonical_texts_sha256": "c3b083d0818be4c61f7c3ad59170409d4754db4a0f52954e1c7692ea17e6dc0c",
   "threshold_selection": "Owner-approved active policy is recorded in AGENTS.md and split_summary.json; this diagnostic tool does not select by model performance"
 }

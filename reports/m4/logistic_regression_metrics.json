@@ -105,24 +105,24 @@
     ]
   },
   "majority_class_test_accuracy": 0.8270692793660992,
-  "fit_and_evaluation_seconds": 466.1408161999425,
-  "processed_sha256": "78f9991ebb5c09041f381b799fa7eb30fa6161ecab5cb25f5e890a48b1d5b78d",
-  "splits_sha256": "558101c3ddd3d1e587a4d82a5239f857ba6ed59c48948c3b2f98e76fc603dadd",
+  "fit_and_evaluation_seconds": 32.83067808300257,
+  "processed_sha256": "6c4f323ea0381afa9e9a1a64ae2754adf6081cf6ba30304eed956844fb788a88",
+  "splits_sha256": "4ead752bd201f32b4eca4c2c4ee30ac3688e23c72f0dea7449472c1b6b6505f6",
   "environment": {
     "numpy": "2.5.4",
-    "pandas": "3.1.0",
+    "pandas": "3.1.1",
     "scikit-learn": "1.9.1",
     "scipy": "1.18.1",
     "joblib": "1.6.0"
   },
   "limitations": "In-corpus group-aware evaluation; domain/generator holdouts and independent transfer remain separate experiments",
   "standardized_coefficients": {
-    "Text_Word_Count": -0.3722172942046802,
-    "Text_Average_Word_Length": 0.7039306809836658,
-    "Text_Average_Sentence_Length_Words": 1.6389571791549538,
-    "Text_Guiraud_Root_TTR": -0.48365986248702436,
-    "Text_Punctuation_Density": -0.11892163454176885,
-    "Text_Flesch_Kincaid_Grade_Level": -1.9015882596784344,
-    "Text_Burstiness": -0.38185953504041104
+    "Text_Word_Count": -0.37221729420468025,
+    "Text_Average_Word_Length": 0.7039306809836684,
+    "Text_Average_Sentence_Length_Words": 1.638957179154959,
+    "Text_Guiraud_Root_TTR": -0.48365986248702475,
+    "Text_Punctuation_Density": -0.1189216345417688,
+    "Text_Flesch_Kincaid_Grade_Level": -1.9015882596784401,
+    "Text_Burstiness": -0.3818595350404111
   }
 }

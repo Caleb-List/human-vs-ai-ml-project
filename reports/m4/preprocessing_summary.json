@@ -143,7 +143,7 @@
       "entries": 5404
     }
   ],
-  "raw_manifest_sha256": "1606cff0435974a924f30c17e58bf5b16501a856e65981420206c32ce3b7919e",
+  "raw_manifest_sha256": "3e7941c9540836e1ec007135e6a0a8266fd14bb6308c0804776a86b3c8bec236",
   "operations": [
     {
       "operation": "Expand passages/reviews",
@@ -191,9 +191,9 @@
     "Text_Burstiness"
   ],
   "output_sha256": {
-    "m4_processed.csv": "78f9991ebb5c09041f381b799fa7eb30fa6161ecab5cb25f5e890a48b1d5b78d",
-    "m4_provenance.csv": "f4920ef5a5467cd12e14079d4ca799a639d74103ef350c6b21d83749307ff6eb",
-    "source_groups_candidate.csv": "6fdafeb4e26e88a34d9afa1ac46c03931df894e192c0a7ea736f3f89e6406470"
+    "m4_processed.csv": "6c4f323ea0381afa9e9a1a64ae2754adf6081cf6ba30304eed956844fb788a88",
+    "m4_provenance.csv": "78cb21eeb305d8e0451668284df8397aa8c55c65b669cc6525a15fd4843c09f2",
+    "source_groups_candidate.csv": "dd174b702c0c7f152d6efa2a5f0330832d7cc488d996090547791ffa5a13eed0"
   },
   "validation": "Unique IDs/texts, both labels, exact schema, finite features; all retained origins mapped"
 }

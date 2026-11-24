@@ -63,6 +63,6 @@
     }
   ],
   "validation": "No source or selected near-duplicate group crosses train/test or CV folds; both classes in every evaluation fold",
-  "processed_sha256": "78f9991ebb5c09041f381b799fa7eb30fa6161ecab5cb25f5e890a48b1d5b78d",
-  "splits_sha256": "558101c3ddd3d1e587a4d82a5239f857ba6ed59c48948c3b2f98e76fc603dadd"
+  "processed_sha256": "6c4f323ea0381afa9e9a1a64ae2754adf6081cf6ba30304eed956844fb788a88",
+  "splits_sha256": "4ead752bd201f32b4eca4c2c4ee30ac3688e23c72f0dea7449472c1b6b6505f6"
 }
