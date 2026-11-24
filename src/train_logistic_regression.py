@@ -14,6 +14,7 @@ Evaluation: CV train/validation metrics, a single evaluation on the untouched
 Outputs:
     reports/metrics/logistic_regression_cv_results.csv
     reports/metrics/logistic_regression_metrics.json
+    reports/metrics/logistic_regression_test_predictions.csv
     reports/figures/logistic_regression_*.png
     models/logistic_regression.joblib
 """
@@ -46,12 +47,15 @@ from modeling import (
     TARGET_COLUMN,
     classification_metrics,
     confusion,
-    load_detector_scores,
+    detector_reference,
+    format_cv_block,
     load_model_data,
     plot_confusion_matrix,
     plot_roc_curves,
     predefined_cv,
-    template_family_cv,
+    save_test_predictions,
+    summarize_cv,
+    template_family_holdout,
     train_test_frames,
 )
 
@@ -75,20 +79,6 @@ def build_pipeline() -> Pipeline:
             ),
         ]
     )
-
-
-def summarize_cv(cv_scores: dict) -> dict:
-    summary = {}
-    for metric in SCORING:
-        for part in ("train", "test"):
-            values = np.asarray(cv_scores[f"{part}_{metric}"])
-            key = "validation" if part == "test" else "train"
-            summary.setdefault(key, {})[metric] = {
-                "mean": float(values.mean()),
-                "std": float(values.std(ddof=1)),
-                "folds": [float(v) for v in values],
-            }
-    return summary
 
 
 def plot_tuning_curve(cv_results: pd.DataFrame, best_params: dict) -> None:
@@ -177,6 +167,7 @@ def main() -> None:
     train_metrics = classification_metrics(y_train, train_pred, train_score)
     test_metrics = classification_metrics(y_test, test_pred, test_score)
     test_confusion = confusion(y_test, test_pred)
+    save_test_predictions(MODEL_NAME, test, test_pred, test_score)
 
     coefficients = pd.Series(model.named_steps["clf"].coef_[0], index=FEATURE_COLUMNS)
     plot_coefficients(coefficients)
@@ -186,8 +177,7 @@ def main() -> None:
     )
 
     # 4. External reference: the benchmark's own detector score (never an input).
-    detector = load_detector_scores(test["Text_ID"])
-    detector_auc = classification_metrics(y_test, (detector >= 50).astype(int), detector)
+    detector_auc, detector = detector_reference(test)
     plot_roc_curves(
         [
             ("Logistic regression (7 features)", y_test, test_score),
@@ -198,20 +188,8 @@ def main() -> None:
     )
 
     # 5. Stress test: hold out whole template families (training partition only).
-    family_folds = template_family_cv(train)
-    family_scores = cross_validate(
-        clone(best_pipeline), X_train, y_train, cv=family_folds, scoring=SCORING,
-        return_train_score=True,
-    )
-    family_summary = summarize_cv(family_scores)
-    family_fold_members = [
-        {
-            "validation_families": sorted(train.loc[val, "Template_Family_ID"].unique().tolist()),
-            "validation_rows": int(len(val)),
-            "validation_ai_proportion": float(y_train.iloc[val].mean()),
-        }
-        for _, val in family_folds
-    ]
+    family = template_family_holdout(best_pipeline, train)
+    family_summary, family_fold_members = family["summary"], family["folds"]
 
     # 6. Persist the fitted pipeline for predict_text.py.
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
@@ -233,31 +211,25 @@ def main() -> None:
         "standardized_coefficients": coefficients.to_dict(),
         "intercept": float(model.named_steps["clf"].intercept_[0]),
         "template_family_holdout": {"summary": family_summary, "folds": family_fold_members},
-        "benchmark_detector_reference_on_test": {
-            "note": "Detection_Score_Benchmark_Model_A, thresholded at 50; evaluation only",
-            **detector_auc,
-        },
+        "benchmark_detector_reference_on_test": detector_auc,
     }
     (METRICS_DIR / f"{MODEL_NAME}_metrics.json").write_text(json.dumps(results, indent=2))
 
-    def fmt(block: dict) -> str:
-        return "  ".join(f"{k}={v['mean']:.4f}±{v['std']:.4f}" for k, v in block.items())
-
     print("\nNear-duplicate-group CV (selected config):")
-    print("  train:     ", fmt(cv_summary["train"]))
-    print("  validation:", fmt(cv_summary["validation"]))
+    print("  train:     ", format_cv_block(cv_summary["train"]))
+    print("  validation:", format_cv_block(cv_summary["validation"]))
     print("\nFull training partition:", {k: round(v, 4) for k, v in train_metrics.items()})
     print("Held-out test:          ", {k: round(v, 4) for k, v in test_metrics.items()})
     print("Test confusion matrix:  ", test_confusion)
     print("\nTemplate-family hold-out (training partition only):")
-    print("  train:     ", fmt(family_summary["train"]))
-    print("  validation:", fmt(family_summary["validation"]))
+    print("  train:     ", format_cv_block(family_summary["train"]))
+    print("  validation:", format_cv_block(family_summary["validation"]))
     for fold in family_fold_members:
         print("   ", fold)
-    print("\nBenchmark detector reference on test:", {k: round(v, 4) for k, v in detector_auc.items()})
+    print("\nBenchmark detector reference on test:", {k: round(v, 4) for k, v in detector_auc.items() if k != "note"})
     print("\nStandardized coefficients:")
     print(coefficients.sort_values().round(4).to_string())
-    print(f"\nWrote metrics to {METRICS_DIR}, figures to {FIGURES_DIR}, model to {MODELS_DIR}")
+    print("\nWrote metrics to reports/metrics/, figures to reports/figures/, model to models/")
 
 
 if __name__ == "__main__":

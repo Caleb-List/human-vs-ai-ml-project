@@ -29,7 +29,7 @@ Two grouping levels are derived from the same similarity graph:
   one group, and a group never crosses the train/test boundary or a CV fold.
 
 The thresholds are justified from the data; see
-`rubric_explanation/data_preprocessing_and_exploration.md` and the diagnostics
+`docs/data_preprocessing_and_exploration.md` and the diagnostics
 printed and plotted by this script.
 """
 

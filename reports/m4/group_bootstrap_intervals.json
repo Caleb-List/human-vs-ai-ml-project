@@ -1,0 +1,200 @@
+{
+  "method": "Paired percentile bootstrap of whole held-out source/near-duplicate groups with replacement",
+  "replicates": 200,
+  "seed": 478,
+  "test_groups": 2758,
+  "scope": "Conditional on fixed trained models/split; does not include retraining/tuning uncertainty or establish across-domain generalization",
+  "models": {
+    "transfer_logistic_regression": {
+      "accuracy": {
+        "estimate": 0.2908234286326159,
+        "lower_95": 0.2827003770770581,
+        "upper_95": 0.29931147072073405
+      },
+      "balanced_accuracy": {
+        "estimate": 0.5373576669076964,
+        "lower_95": 0.5309689564339948,
+        "upper_95": 0.5429763795273506
+      },
+      "f1": {
+        "estimate": 0.27235772357723576,
+        "lower_95": 0.25742718442338697,
+        "upper_95": 0.2876058488110039
+      },
+      "roc_auc": {
+        "estimate": 0.6221017519275693,
+        "lower_95": 0.6133000471470161,
+        "upper_95": 0.6303996393993936
+      },
+      "human_false_positive_rate": {
+        "estimate": 0.08575851393188855,
+        "lower_95": 0.07707847714460216,
+        "upper_95": 0.0968697803897309
+      }
+    },
+    "logistic_regression": {
+      "accuracy": {
+        "estimate": 0.843612806510333,
+        "lower_95": 0.8399357360830353,
+        "upper_95": 0.8470509158639523
+      },
+      "balanced_accuracy": {
+        "estimate": 0.5620349423532939,
+        "lower_95": 0.5566155239749704,
+        "upper_95": 0.5682261441720918
+      },
+      "f1": {
+        "estimate": 0.9130266488015483,
+        "lower_95": 0.9109365581890657,
+        "upper_95": 0.9149035609780197
+      },
+      "roc_auc": {
+        "estimate": 0.7102619714516132,
+        "lower_95": 0.7002707173411886,
+        "upper_95": 0.7206820566725892
+      },
+      "human_false_positive_rate": {
+        "estimate": 0.868421052631579,
+        "lower_95": 0.8562664999920411,
+        "upper_95": 0.8790885365202592
+      }
+    },
+    "transfer_random_forest": {
+      "accuracy": {
+        "estimate": 0.19418567298425957,
+        "lower_95": 0.1904889382407525,
+        "upper_95": 0.19814194339998908
+      },
+      "balanced_accuracy": {
+        "estimate": 0.5003614843686118,
+        "lower_95": 0.4965139193501338,
+        "upper_95": 0.5035328941664635
+      },
+      "f1": {
+        "estimate": 0.06218455978565643,
+        "lower_95": 0.05582174791636305,
+        "upper_95": 0.0683945518774245
+      },
+      "roc_auc": {
+        "estimate": 0.6118535287864773,
+        "lower_95": 0.6008455099668835,
+        "upper_95": 0.6214832781207651
+      },
+      "human_false_positive_rate": {
+        "estimate": 0.031578947368421054,
+        "lower_95": 0.025607427059480273,
+        "upper_95": 0.03810858486071292
+      }
+    },
+    "random_forest": {
+      "accuracy": {
+        "estimate": 0.8794838847842381,
+        "lower_95": 0.8756477789783477,
+        "upper_95": 0.8839154219924857
+      },
+      "balanced_accuracy": {
+        "estimate": 0.7153351180751403,
+        "lower_95": 0.7067246029074463,
+        "upper_95": 0.725888437710881
+      },
+      "f1": {
+        "estimate": 0.929886310543529,
+        "lower_95": 0.9276849358618033,
+        "upper_95": 0.9325245256360346
+      },
+      "roc_auc": {
+        "estimate": 0.9077882174974707,
+        "lower_95": 0.9029956540715874,
+        "upper_95": 0.9132049380634004
+      },
+      "human_false_positive_rate": {
+        "estimate": 0.5356037151702786,
+        "lower_95": 0.5137747322879602,
+        "upper_95": 0.553926081147856
+      }
+    }
+  },
+  "paired_differences": {
+    "LR retrained minus transfer": {
+      "accuracy": {
+        "estimate": 0.5527893778777171,
+        "lower_95": 0.5428844056407548,
+        "upper_95": 0.5623173650110017
+      },
+      "balanced_accuracy": {
+        "estimate": 0.024677275445597502,
+        "lower_95": 0.0169248365732247,
+        "upper_95": 0.03448313769542624
+      },
+      "f1": {
+        "estimate": 0.6406689252243125,
+        "lower_95": 0.6249243751864805,
+        "upper_95": 0.6555166368541443
+      },
+      "roc_auc": {
+        "estimate": 0.08816021952404385,
+        "lower_95": 0.07608362852183932,
+        "upper_95": 0.0994293115491431
+      },
+      "human_false_positive_rate": {
+        "estimate": 0.7826625386996904,
+        "lower_95": 0.7662013730400422,
+        "upper_95": 0.7964363744279136
+      }
+    },
+    "RF retrained minus transfer": {
+      "accuracy": {
+        "estimate": 0.6852982117999785,
+        "lower_95": 0.6778868958261333,
+        "upper_95": 0.6908628194521405
+      },
+      "balanced_accuracy": {
+        "estimate": 0.21497363370652844,
+        "lower_95": 0.20504316475081255,
+        "upper_95": 0.2250162394692699
+      },
+      "f1": {
+        "estimate": 0.8677017507578726,
+        "lower_95": 0.8603471234753631,
+        "upper_95": 0.8735206214171245
+      },
+      "roc_auc": {
+        "estimate": 0.2959346887109935,
+        "lower_95": 0.28664529209178824,
+        "upper_95": 0.3070691531905216
+      },
+      "human_false_positive_rate": {
+        "estimate": 0.5040247678018576,
+        "lower_95": 0.48196507328081256,
+        "upper_95": 0.5236110203854027
+      }
+    },
+    "Retrained RF minus LR": {
+      "accuracy": {
+        "estimate": 0.03587107827390512,
+        "lower_95": 0.03200551549340489,
+        "upper_95": 0.03975070033971435
+      },
+      "balanced_accuracy": {
+        "estimate": 0.1533001757218464,
+        "lower_95": 0.14570043051034604,
+        "upper_95": 0.16220692231634448
+      },
+      "f1": {
+        "estimate": 0.016859661741980725,
+        "lower_95": 0.014689028013469696,
+        "upper_95": 0.019223123460256904
+      },
+      "roc_auc": {
+        "estimate": 0.19752624604585756,
+        "lower_95": 0.1881080469623213,
+        "upper_95": 0.2086323382536684
+      },
+      "human_false_positive_rate": {
+        "estimate": -0.3328173374613004,
+        "lower_95": -0.3506607850470924,
+        "upper_95": -0.3171745157721298
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "random_state": 478,
+  "threshold": 0.85,
+  "rows_before": 93435,
+  "rows_after": 93435,
+  "groups": 13799,
+  "largest_group": 216,
+  "test_proportion": 0.19990367635254455,
+  "partitions": [
+    {
+      "split": "test",
+      "cv_fold": -1,
+      "rows": 18678,
+      "groups": 2758,
+      "Human": 3230,
+      "AI": 15448,
+      "AI_proportion": 0.8270692793660992
+    },
+    {
+      "split": "train",
+      "cv_fold": 0,
+      "rows": 14909,
+      "groups": 2199,
+      "Human": 2584,
+      "AI": 12325,
+      "AI_proportion": 0.8266818700114025
+    },
+    {
+      "split": "train",
+      "cv_fold": 1,
+      "rows": 14943,
+      "groups": 2207,
+      "Human": 2584,
+      "AI": 12359,
+      "AI_proportion": 0.8270762229806599
+    },
+    {
+      "split": "train",
+      "cv_fold": 2,
+      "rows": 14961,
+      "groups": 2210,
+      "Human": 2584,
+      "AI": 12377,
+      "AI_proportion": 0.8272842724416817
+    },
+    {
+      "split": "train",
+      "cv_fold": 3,
+      "rows": 14978,
+      "groups": 2213,
+      "Human": 2583,
+      "AI": 12395,
+      "AI_proportion": 0.8275470690345841
+    },
+    {
+      "split": "train",
+      "cv_fold": 4,
+      "rows": 14966,
+      "groups": 2212,
+      "Human": 2583,
+      "AI": 12383,
+      "AI_proportion": 0.8274087932647334
+    }
+  ],
+  "validation": "No source or selected near-duplicate group crosses train/test or CV folds; both classes in every evaluation fold",
+  "processed_sha256": "6c4f323ea0381afa9e9a1a64ae2754adf6081cf6ba30304eed956844fb788a88",
+  "splits_sha256": "4ead752bd201f32b4eca4c2c4ee30ac3688e23c72f0dea7449472c1b6b6505f6"
+}

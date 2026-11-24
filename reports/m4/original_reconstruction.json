@@ -1,0 +1,85 @@
+{
+  "logistic_regression": {
+    "status": "Reconstructed from saved selected configuration, not the original binary; no retuning",
+    "best_params": {
+      "clf__C": 0.1,
+      "clf__l1_ratio": 1.0
+    },
+    "original_train_rows": 40000,
+    "original_test_rows": 10000,
+    "prediction_disagreements_with_saved_original": 0,
+    "max_probability_difference_from_saved_original": 4.997992990585232e-07,
+    "reconstructed_original_test_metrics": {
+      "accuracy": 0.9944,
+      "precision": 0.9932162809257782,
+      "recall": 0.9956,
+      "f1": 0.9944067119456652,
+      "roc_auc": 0.9998214,
+      "balanced_accuracy": 0.9944,
+      "average_precision": 0.9998250122689272,
+      "human_false_positive_rate": 0.0068,
+      "confusion_matrix": [
+        [
+          4966,
+          34
+        ],
+        [
+          22,
+          4978
+        ]
+      ]
+    },
+    "saved_original_test_metrics": {
+      "accuracy": 0.9944,
+      "precision": 0.9932162809257782,
+      "recall": 0.9956,
+      "f1": 0.9944067119456652,
+      "roc_auc": 0.9998214
+    },
+    "original_processed_sha256": "3031191e0a6ae167c01a1ea3a5081d54a6107806bae40d839b213aff27fb383b",
+    "saved_test_predictions_sha256": "4d6a1f5ab7aef1223e3ead5ac7486a36167b15b0979c7079fe53c7885a72d807",
+    "sklearn_version": "1.9.1"
+  },
+  "random_forest": {
+    "status": "Reconstructed from saved selected configuration, not the original binary; no retuning",
+    "best_params": {
+      "clf__max_depth": null,
+      "clf__max_features": 2,
+      "clf__min_samples_leaf": 1
+    },
+    "original_train_rows": 40000,
+    "original_test_rows": 10000,
+    "prediction_disagreements_with_saved_original": 0,
+    "max_probability_difference_from_saved_original": 3.33333333379926e-07,
+    "reconstructed_original_test_metrics": {
+      "accuracy": 0.9952,
+      "precision": 0.9926382809391165,
+      "recall": 0.9978,
+      "f1": 0.995212447636146,
+      "roc_auc": 0.9999296999999999,
+      "balanced_accuracy": 0.9952000000000001,
+      "average_precision": 0.999928660132402,
+      "human_false_positive_rate": 0.0074,
+      "confusion_matrix": [
+        [
+          4963,
+          37
+        ],
+        [
+          11,
+          4989
+        ]
+      ]
+    },
+    "saved_original_test_metrics": {
+      "accuracy": 0.9952,
+      "precision": 0.9926382809391165,
+      "recall": 0.9978,
+      "f1": 0.995212447636146,
+      "roc_auc": 0.9999296999999999
+    },
+    "original_processed_sha256": "3031191e0a6ae167c01a1ea3a5081d54a6107806bae40d839b213aff27fb383b",
+    "saved_test_predictions_sha256": "afa8167740790418e7b04a6878d3222fb990d0d9d26de3f92fa874d69c539581",
+    "sklearn_version": "1.9.1"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "original_rows": 50000,
+  "m4_rows": 93435,
+  "plot": "Empirical cumulative distribution per dataset and class; no downsampling, fitting or row exclusion",
+  "display_ranges": {
+    "Text_Word_Count": {
+      "plot_x_min": 29.0,
+      "plot_x_max": 1824.8299999999872
+    },
+    "Text_Average_Word_Length": {
+      "plot_x_min": 3.6475210559184434,
+      "plot_x_max": 7.3061224489795915
+    },
+    "Text_Average_Sentence_Length_Words": {
+      "plot_x_min": 6.404451566951567,
+      "plot_x_max": 59.666666666666664
+    },
+    "Text_Guiraud_Root_TTR": {
+      "plot_x_min": 1.5813724621153584,
+      "plot_x_max": 14.966431531228165
+    },
+    "Text_Punctuation_Density": {
+      "plot_x_min": 0.008771929824561403,
+      "plot_x_max": 0.08987936451328023
+    },
+    "Text_Flesch_Kincaid_Grade_Level": {
+      "plot_x_min": 2.5581908045620683,
+      "plot_x_max": 27.620000000000008
+    },
+    "Text_Burstiness": {
+      "plot_x_min": -1.0,
+      "plot_x_max": 0.16447505290669473
+    }
+  },
+  "interpretation": "Descriptive domain/style shift, not model performance or proof of dataset validity"
+}

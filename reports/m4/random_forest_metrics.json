@@ -1,0 +1,129 @@
+{
+  "dataset": "M4 Kaggle v1",
+  "model": "random_forest",
+  "features": [
+    "Text_Word_Count",
+    "Text_Average_Word_Length",
+    "Text_Average_Sentence_Length_Words",
+    "Text_Guiraud_Root_TTR",
+    "Text_Punctuation_Density",
+    "Text_Flesch_Kincaid_Grade_Level",
+    "Text_Burstiness"
+  ],
+  "best_params": {
+    "clf__max_depth": null,
+    "clf__max_features": 7,
+    "clf__min_samples_leaf": 10
+  },
+  "selection_metric": "roc_auc",
+  "decision_threshold": 0.5,
+  "train_rows": 74757,
+  "test_rows": 18678,
+  "cv": {
+    "train": {
+      "accuracy": {
+        "mean": 0.925097314342476,
+        "std": 0.0004974347109668858
+      },
+      "precision": {
+        "mean": 0.9265197588141699,
+        "std": 0.000775410863848757
+      },
+      "recall": {
+        "mean": 0.987790941269272,
+        "std": 0.0004255873388118998
+      },
+      "f1": {
+        "mean": 0.9561744422862942,
+        "std": 0.00026746460337466287
+      },
+      "roc_auc": {
+        "mean": 0.9751703126109097,
+        "std": 0.0001932826621542343
+      }
+    },
+    "validation": {
+      "accuracy": {
+        "mean": 0.878739417818801,
+        "std": 0.000778329692228973
+      },
+      "precision": {
+        "mean": 0.8944240128344259,
+        "std": 0.0007627971096820243
+      },
+      "recall": {
+        "mean": 0.9676256381014936,
+        "std": 0.0008703346684225279
+      },
+      "f1": {
+        "mean": 0.9295854856875596,
+        "std": 0.0004707067319066211
+      },
+      "roc_auc": {
+        "mean": 0.9038805390100452,
+        "std": 0.0024072028550841122
+      }
+    }
+  },
+  "train_metrics": {
+    "accuracy": 0.9260805008226655,
+    "precision": 0.9277738107898695,
+    "recall": 0.9875159688869484,
+    "f1": 0.956713144289519,
+    "roc_auc": 0.97533803682072,
+    "balanced_accuracy": 0.8097511722434432,
+    "average_precision": 0.9948001335009453,
+    "human_false_positive_rate": 0.3680136244000619,
+    "confusion_matrix": [
+      [
+        8164,
+        4754
+      ],
+      [
+        772,
+        61067
+      ]
+    ]
+  },
+  "test_metrics": {
+    "accuracy": 0.8794838847842381,
+    "precision": 0.8961397610614156,
+    "recall": 0.9662739513205593,
+    "f1": 0.929886310543529,
+    "roc_auc": 0.9077882174974707,
+    "balanced_accuracy": 0.7153351180751403,
+    "average_precision": 0.9778369953786464,
+    "human_false_positive_rate": 0.5356037151702786,
+    "confusion_matrix": [
+      [
+        1500,
+        1730
+      ],
+      [
+        521,
+        14927
+      ]
+    ]
+  },
+  "majority_class_test_accuracy": 0.8270692793660992,
+  "fit_and_evaluation_seconds": 820.0830530421808,
+  "processed_sha256": "6c4f323ea0381afa9e9a1a64ae2754adf6081cf6ba30304eed956844fb788a88",
+  "splits_sha256": "4ead752bd201f32b4eca4c2c4ee30ac3688e23c72f0dea7449472c1b6b6505f6",
+  "environment": {
+    "numpy": "2.5.4",
+    "pandas": "3.1.1",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "joblib": "1.6.0"
+  },
+  "limitations": "In-corpus group-aware evaluation; domain/generator holdouts and independent transfer remain separate experiments",
+  "training_impurity_importances": {
+    "Text_Word_Count": 0.3259673775538303,
+    "Text_Average_Word_Length": 0.07845831511828119,
+    "Text_Average_Sentence_Length_Words": 0.09044193623757973,
+    "Text_Guiraud_Root_TTR": 0.20343004379908394,
+    "Text_Punctuation_Density": 0.09788517727460223,
+    "Text_Flesch_Kincaid_Grade_Level": 0.05665118925001766,
+    "Text_Burstiness": 0.14716596076660488
+  }
+}

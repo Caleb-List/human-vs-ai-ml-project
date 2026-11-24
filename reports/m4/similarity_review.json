@@ -1,0 +1,80 @@
+{
+  "status": "Similarity diagnostics; partition assignment and model evaluation are separate downstream steps",
+  "similarity": "Exact cosine of lowercased binary word-trigram sets; same tokenizer as original split audit",
+  "method": "All unordered text pairs evaluated via sparse block products; unique columns removed only after normalization",
+  "precision": "Float32 sparse products; cosine roundoff clipped to [0,1] for diagnostics",
+  "canonical_texts": 93435,
+  "unordered_pairs": 4365002895,
+  "zero_trigram_texts": 1,
+  "retained_edge_floor": 0.7,
+  "nearest_neighbor_quantiles": {
+    "0": 0.0,
+    "0.25": 0.04978867992758751,
+    "0.5": 0.08072920888662338,
+    "0.75": 0.18289652466773987,
+    "0.9": 0.3459340035915375,
+    "0.95": 0.4807848036289215,
+    "0.99": 0.8545160293579102,
+    "1": 1.0
+  },
+  "source_groups_before_near_duplicates": 13847,
+  "largest_source_group": 185,
+  "thresholds": [
+    {
+      "threshold": 0.7,
+      "near_duplicate_edges": 1267,
+      "combined_groups": 13709,
+      "largest_group": 609,
+      "rows_in_multitext_groups": 93434
+    },
+    {
+      "threshold": 0.75,
+      "near_duplicate_edges": 992,
+      "combined_groups": 13748,
+      "largest_group": 441,
+      "rows_in_multitext_groups": 93434
+    },
+    {
+      "threshold": 0.8,
+      "near_duplicate_edges": 757,
+      "combined_groups": 13774,
+      "largest_group": 343,
+      "rows_in_multitext_groups": 93434
+    },
+    {
+      "threshold": 0.85,
+      "near_duplicate_edges": 532,
+      "combined_groups": 13799,
+      "largest_group": 216,
+      "rows_in_multitext_groups": 93434
+    },
+    {
+      "threshold": 0.9,
+      "near_duplicate_edges": 366,
+      "combined_groups": 13822,
+      "largest_group": 185,
+      "rows_in_multitext_groups": 93434
+    },
+    {
+      "threshold": 0.95,
+      "near_duplicate_edges": 251,
+      "combined_groups": 13835,
+      "largest_group": 185,
+      "rows_in_multitext_groups": 93434
+    },
+    {
+      "threshold": 0.99,
+      "near_duplicate_edges": 207,
+      "combined_groups": 13847,
+      "largest_group": 185,
+      "rows_in_multitext_groups": 93434
+    }
+  ],
+  "original_benchmark_overlap": {
+    "original_rows": 50000,
+    "m4_normalized_exact_overlap_rows": 0,
+    "scope": "Normalized exact overlap only; no claim of semantic independence"
+  },
+  "canonical_texts_sha256": "c3b083d0818be4c61f7c3ad59170409d4754db4a0f52954e1c7692ea17e6dc0c",
+  "threshold_selection": "Owner-approved active policy is recorded in AGENTS.md and split_summary.json; this diagnostic tool does not select by model performance"
+}

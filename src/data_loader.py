@@ -1,5 +1,6 @@
 """Download the project dataset from Kaggle."""
 
+import shutil
 from pathlib import Path
 
 import kagglehub
@@ -14,9 +15,17 @@ LABEL_NAMES = {0: "Human", 1: "AI"}
 
 
 def download_dataset() -> str:
-    """Download the latest dataset version into data/raw and return that path."""
-    RAW_DATA_DIR.parent.mkdir(parents=True, exist_ok=True)
-    return kagglehub.dataset_download(DATASET_HANDLE, output_dir=str(RAW_DATA_DIR))
+    """Download the dataset CSV into data/raw (once) and return that directory.
+
+    The raw file is never re-downloaded or overwritten once present. Downloading
+    goes through KaggleHub's cache and copies only the CSV, so other contents of
+    data/raw (such as the M4 download) do not block it.
+    """
+    if not RAW_CSV_PATH.exists():
+        RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
+        cache_dir = Path(kagglehub.dataset_download(DATASET_HANDLE))
+        shutil.copy2(cache_dir / RAW_CSV_PATH.name, RAW_CSV_PATH)
+    return str(RAW_DATA_DIR)
 
 
 def load_dataset() -> pd.DataFrame:

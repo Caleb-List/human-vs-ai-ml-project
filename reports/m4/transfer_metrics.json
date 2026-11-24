@@ -1,0 +1,60 @@
+{
+  "logistic_regression": {
+    "stage": "Original-benchmark model -> M4 test, no refitting/scaling/tuning on M4",
+    "model_path": "models/logistic_regression.joblib",
+    "model_sha256": "f5375806486bf9dcaf2039c3bd1d0edee233df125282f09b9c92f5ed212ca6ca",
+    "reconstructed": false,
+    "test_rows": 18678,
+    "test_metrics": {
+      "accuracy": 0.2908234286326159,
+      "precision": 0.8994920174165457,
+      "recall": 0.1604738477472812,
+      "f1": 0.27235772357723576,
+      "roc_auc": 0.6221017519275693,
+      "balanced_accuracy": 0.5373576669076964,
+      "average_precision": 0.8735276922750238,
+      "human_false_positive_rate": 0.08575851393188855,
+      "confusion_matrix": [
+        [
+          2953,
+          277
+        ],
+        [
+          12969,
+          2479
+        ]
+      ]
+    },
+    "processed_sha256": "6c4f323ea0381afa9e9a1a64ae2754adf6081cf6ba30304eed956844fb788a88",
+    "splits_sha256": "4ead752bd201f32b4eca4c2c4ee30ac3688e23c72f0dea7449472c1b6b6505f6"
+  },
+  "random_forest": {
+    "stage": "Original-benchmark model -> M4 test, no refitting/scaling/tuning on M4",
+    "model_path": "models/random_forest.joblib",
+    "model_sha256": "db34591087e26577238365a6520ae2c16b4ba24d8ee526a16025f78dfdc0edd4",
+    "reconstructed": false,
+    "test_rows": 18678,
+    "test_metrics": {
+      "accuracy": 0.19418567298425957,
+      "precision": 0.8302828618968386,
+      "recall": 0.03230191610564474,
+      "f1": 0.06218455978565643,
+      "roc_auc": 0.6118535287864773,
+      "balanced_accuracy": 0.5003614843686118,
+      "average_precision": 0.8627657226116212,
+      "human_false_positive_rate": 0.031578947368421054,
+      "confusion_matrix": [
+        [
+          3128,
+          102
+        ],
+        [
+          14949,
+          499
+        ]
+      ]
+    },
+    "processed_sha256": "6c4f323ea0381afa9e9a1a64ae2754adf6081cf6ba30304eed956844fb788a88",
+    "splits_sha256": "4ead752bd201f32b4eca4c2c4ee30ac3688e23c72f0dea7449472c1b6b6505f6"
+  }
+}
